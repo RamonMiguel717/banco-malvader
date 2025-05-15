@@ -30,6 +30,7 @@ Este projeto tem como objetivo o desenvolvimento de um **Sistema Bancário compl
 
 - **Linguagem**: Python
 - **Banco de Dados**: MySQL
+- **Hospedagem**: FreeSQLDatabase.com
 - **Metodologia**: Scrum + Kanban
 - **Arquitetura**: MVC + DAO + Service Layer
 - **Controle de Versão**: Git + GitHub
