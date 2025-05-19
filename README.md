@@ -12,6 +12,8 @@ Este projeto tem como objetivo o desenvolvimento de um **Sistema Bancário compl
 6. Interface específica para cada tipo de usuário (cliente, gerente, administrador).
 7. Camadas bem definidas: Models, Views, Controllers, DAO (Repositórios) e Services.
 8. Aplicação de **Scrum** como metodologia ágil, com acompanhamento visual via **Kanban**.
+9. Testes unitários utilizando Pytest;
+10. Ambiente virtual para instalação de pacotes.
 
 ---
 
