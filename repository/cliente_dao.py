@@ -21,15 +21,25 @@ def criar_banco_e_tabelas():
         """)
 
         table_exists = cursor.fetchone()[0]
-
         if table_exists == 0:
             print("Tabela 'usuarios' não existe, criando...")
             cursor.execute("""
+                CREATE TABLE tipo_usuario(
+                    id INT PRIMARY KEY AUTO_INCREMENT.
+                    nome VARHCAR(50) UNIQUE NOT NULL
+                    categoria VARCHAR(50) NOT NULL 
+                );
+
+                INSERT INTO tipo_usuario (nome) VALUES ('admin'),('cliente'),('funcionario'),('gerente');
+
                 CREATE TABLE usuarios(
+                    id_usuario INT PRIMARY KEY
                     nome VARCHAR(100) NOT NULL,
                     email VARCHAR(100) NOT NULL UNIQUE,
-                    cpf VARCHAR(11) NOT NULL UNIQUE PRIMARY KEY,
-                    data_nascimento DATE NOT NULL     
+                    cpf VARCHAR(11) NOT NULL UNIQUE,
+                    data_nascimento DATE NOT NULL  
+                    telefone UNIQUE
+                    tipo_usuario VARCHAR(100)
                                     )
                         """)
             print("Tabela criada com sucesso.")
