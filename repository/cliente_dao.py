@@ -42,13 +42,13 @@ def criar_banco_e_tabelas():
 
 
 def criar_banco():
-    with DBContext as (conn,cursor):
+    with DBContext() as (conn, cursor):
         cursor.execute("CREATE DATABASE IF NOT EXISTS banco_malvader")
         cursor.execute("USE banco_malvader")
 
 def create_table_usuarios():
         # Tabela de usuarios
-     with DBContext as (conn,cursor):
+     with DBContext() as (conn, cursor):
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS usuarios (
                 id_usuario INT PRIMARY KEY AUTO_INCREMENT,
@@ -64,7 +64,7 @@ def create_table_usuarios():
         """)
 def create_table_funcionarios():
         # Tabela de funcionarios
-    with DBContext as (conn,cursor):
+    with DBContext() as (conn, cursor):
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS funcionarios (
                 id_funcionario INT PRIMARY KEY AUTO_INCREMENT,
@@ -78,7 +78,7 @@ def create_table_funcionarios():
         """)
 def create_table_cliente():
         # Tabela de clientes
-    with DBContext as (conn,cursor):
+    with DBContext() as (conn, cursor):
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS cliente (
                 id_cliente INT PRIMARY KEY AUTO_INCREMENT,
@@ -89,7 +89,7 @@ def create_table_cliente():
         """)
 def create_table_endereco():
         # Tabela de enderecos
-    with DBContext as (conn,cursor):
+    with DBContext() as (conn, cursor):
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS endereco (
                 id_endereco INT PRIMARY KEY AUTO_INCREMENT,
@@ -106,7 +106,7 @@ def create_table_endereco():
         """)
 def create_table_agencia():
         # Tabela de agencias
-    with DBContext as (conn,cursor):
+    with DBContext() as (conn, cursor):
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS agencia (
                 id_agencia INT PRIMARY KEY AUTO_INCREMENT,
@@ -118,7 +118,7 @@ def create_table_agencia():
         """)
 def create_table_conta():
         # Tabela de contas
-    with DBContext as (conn,cursor):
+    with DBContext() as (conn, cursor):
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS conta (
                 id_conta INT PRIMARY KEY AUTO_INCREMENT,
@@ -135,7 +135,7 @@ def create_table_conta():
         """)
 def create_table_cotnta_poupanca():
         # Conta poupança
-    with DBContext as (conn,cursor):
+    with DBContext() as (conn, cursor):
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS conta_poupanca (
                 id_conta_poupanca INT PRIMARY KEY AUTO_INCREMENT,
@@ -147,7 +147,7 @@ def create_table_cotnta_poupanca():
         """)
 def create_table_conta_corrente():
         # Conta corrente
-    with DBContext as (conn,cursor):
+    with DBContext() as (conn, cursor):
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS conta_corrente (
                 id_conta_corrente INT PRIMARY KEY AUTO_INCREMENT,
@@ -160,7 +160,7 @@ def create_table_conta_corrente():
         """)
 def create_table_conta_investimentos():
         # Conta investimento
-    with DBContext as (conn,cursor):
+    with DBContext() as (conn, cursor):
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS conta_investimentos (
                 id_conta_investimento INT PRIMARY KEY AUTO_INCREMENT,
@@ -173,7 +173,7 @@ def create_table_conta_investimentos():
         """)
 def create_table_transacao():
         # Transações
-    with DBContext as (conn,cursor):
+    with DBContext() as (conn, cursor):
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS transacao (
                 id_transacao INT PRIMARY KEY AUTO_INCREMENT,
@@ -189,7 +189,7 @@ def create_table_transacao():
         """)
 def create_table_auditoria():
         # Auditoria
-    with DBContext as (conn,cursor):
+    with DBContext() as (conn, cursor):
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS auditoria (
                 id_auditoria INT PRIMARY KEY AUTO_INCREMENT,
@@ -202,7 +202,7 @@ def create_table_auditoria():
         """)
 def create_table_relatorio():
         # Relatório
-    with DBContext as (conn,cursor):
+    with DBContext() as (conn, cursor):
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS relatorio (
                 id_relatorio INT PRIMARY KEY AUTO_INCREMENT,
@@ -214,8 +214,6 @@ def create_table_relatorio():
             );
         """)
     
-  
-
 def tratar_erro_mysql(err):
     if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
         print("Erro de acesso: usuário ou senha incorretos")
@@ -224,22 +222,24 @@ def tratar_erro_mysql(err):
     else:
         print(f"Erro ao se conectar: {err}")
 
+
+#CLIENTES
 def insert_cliente(id_usuario,score_credito):
-    with DBContext as (conn,cursor):
+    with DBContext() as (conn, cursor):
         cursor.execute("""
         INSERT INTO cliente (id_usuario,score_credito) VALUES (%s,%s)
     """,(id_usuario,score_credito))
  
 
 def listar_clientes():
-    with DBContext as (conn,cursor):
-
-        cursor.execute["SELECT * FROM cliente"]
-        clintes = cursor.fetchall()
-
+    with DBContext() as (conn, cursor):
+        cursor.execute("SELECT * FROM cliente")
+        clientes = cursor.fetchall()
+        colunas = [desc[0] for desc in cursor.description]
+        return [dict(zip(colunas, linha)) for linha in clientes]
 
 def atualizar_cliente(id_cliente,novo_score):
-    with DBContext as (conn,cursor):
+    with DBContext() as (conn, cursor):
 
       cursor.execute("""
         UPDATE cliente SET score_credito = %s WHERE id_cliente = %s
@@ -247,6 +247,13 @@ def atualizar_cliente(id_cliente,novo_score):
     
     
 def deletar_cliente(id_cliente):
-    with DBContext as (conn,cursor):
+    with DBContext() as (conn, cursor):
+        cursor.execute("DELETE FROM cliente WHERE id_cliente = %s", (id_cliente,))
 
-      cursor.execute["DELETE FROM cliente WHERE id_cliente = %s",(id_cliente)]
+#FUNCIONARIOS
+
+def insert_funcionarios(id_usuario,codigo_funcionario,cargo,id_supervisor):
+    with DBContext() as (conn,cursor):
+        cursor.execute("""
+            INSERT INTO funcionarios (id_usuario, codigo_funcionario,cargo,id_supervisor VALUES (%s,%s,%s))""",(id_usuario,codigo_funcionario,cargo,id_supervisor)
+            )
