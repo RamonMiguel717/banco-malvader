@@ -56,6 +56,7 @@ def create_table_usuarios():
                 cpf VARCHAR(11) NOT NULL UNIQUE,
                 data_nascimento DATE NOT NULL,
                 telefone VARCHAR(15),
+                email VARCHAR(50),
                 tipo_usuario VARCHAR(50),
                 senha_hash VARCHAR(255),
                 otp_ativo BOOLEAN DEFAULT FALSE,
@@ -224,12 +225,12 @@ def tratar_erro_mysql(err):
 
 class UsuarioRepository:
     @staticmethod
-    def insert_usuario(nome, cpf, data_nascimento, telefone, tipo_usuario, senha_hash, otp_ativo=False, otp_expiracao=None):
+    def insert_usuario(nome, cpf, data_nascimento, telefone,email, tipo_usuario, senha_hash, otp_ativo=False, otp_expiracao=None):
         with DBContext() as (conn, cursor):
             cursor.execute("""
-                INSERT INTO usuarios (nome, cpf, data_nascimento, telefone, tipo_usuario, senha_hash, otp_ativo, otp_expiracao)
+                INSERT INTO usuarios (nome, cpf, data_nascimento, telefone,email, tipo_usuario, senha_hash, otp_ativo, otp_expiracao)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-            """, (nome, cpf, data_nascimento, telefone, tipo_usuario, senha_hash, otp_ativo, otp_expiracao))
+            """, (nome, cpf, data_nascimento, telefone,email, tipo_usuario, senha_hash, otp_ativo, otp_expiracao))
 
     @staticmethod
     def list_usuarios():

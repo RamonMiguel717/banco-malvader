@@ -1,6 +1,6 @@
 import bcrypt
 
-class senha_hash:
+class criptografada:
 
     def criptografar_senha(senha):
         senha_bytes = senha.encode('utf-8')
