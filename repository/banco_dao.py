@@ -2,7 +2,7 @@ import mysql.connector
 from repository.conexao import obter_conexao
 from mysql.connector import errorcode
 from dotenv import load_dotenv
-import os
+from utils import auxiliares
 
 load_dotenv()
 
@@ -261,7 +261,20 @@ class ClienteRepository:
             cursor.execute("""
             INSERT INTO cliente (id_usuario,score_credito) VALUES (%s,%s)
         """,(id_usuario,score_credito))
-    
+        conn.commit()
+
+    @staticmethod
+    def find_id_by_cpf(cpf: str):
+        cpf_limpo = auxiliares.limpar_cpf(cpf)
+        with DBContext() as (conn,cursor):
+            cursor.execute("""
+            SELECT c.Cliente FROM cliente c
+            JOIN usuarios u ON c.id_usuario  = id_usuario
+            WHERE u.cpf = %s
+            """,(cpf_limpo))
+            resultado = cursor.fetchone()
+            return resultado[0] if resultado else None
+
     @staticmethod
     def list_clientes():
         with DBContext() as (conn, cursor):
@@ -385,7 +398,7 @@ class ContaRepository:
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
             """, (numero_conta, id_agencia, saldo, tipo_conta, id_cliente, data_abertura, status))
             conn.commit()
-
+ 
     @staticmethod
     def list_contas():
         with DBContext() as (conn, cursor):

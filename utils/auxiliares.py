@@ -6,7 +6,7 @@ import re
 def gerador_codigo_funcionario(id_usuarios: str, cpf: str,data_nascimento:str,cargo:str):
     # TODO Adicionar a função para buscar as informações do funcionario
 
-    cpf_limpo = cpf.replace('.','').replace('-','')
+    cpf_limpo = limpar_cpf(cpf)
     cpf_primeiros = cpf_limpo[:3]
 
     data = datetime.strptime(data_nascimento, "%d/%m%y")
@@ -22,7 +22,12 @@ def gerador_codigo_funcionario(id_usuarios: str, cpf: str,data_nascimento:str,ca
         nivel = "004"
 
     return f"{cpf_primeiros}{mes_ano}{nivel}"
-    
+
+@staticmethod   
+def limpar_cpf(cpf:str):
+    cpf_limpo =''.join(filter(str.isdigit, cpf))
+    return cpf_limpo
+
 
 @staticmethod 
 def verificar_sequencia_numerica(senha,tamanho_min = 1):

@@ -17,7 +17,7 @@ class Validator:
     @staticmethod
     def validate_cpf(cpf: str) -> dict:
         erros = []
-        cpf = ''.join(filter(str.isdigit, cpf))
+        cpf = auxiliares.limpar_cpf(cpf)
 
         if len(cpf) != 11 or cpf == cpf[0] * 11:
             erros.append("CPF inválido.")
