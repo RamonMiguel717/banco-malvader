@@ -25,7 +25,7 @@ def criar_banco_e_tabelas():
     from repository.tabelasDAO import Tabelas as T
     try:
             criar_banco()
-            T.create_table_usuarios()
+            T.create_table_usuario()
             T.create_table_funcionarios()
             T.create_table_cliente()
             T.create_table_endereco()

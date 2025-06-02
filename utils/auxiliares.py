@@ -3,7 +3,7 @@ import re
 
 
 @staticmethod
-def gerador_codigo_funcionario(id_usuarios: str, cpf: str,data_nascimento:str,cargo:str):
+def gerador_codigo_funcionario(id_usuario: str, cpf: str,data_nascimento:str,cargo:str):
     # TODO Adicionar a função para buscar as informações do funcionario
 
     cpf_limpo = limpar_cpf(cpf)

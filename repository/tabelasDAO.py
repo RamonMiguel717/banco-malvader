@@ -2,10 +2,10 @@ from conexao import DBContext
 
 class Tabelas:
 
-    def create_table_usuarios():
+    def create_table_usuario():
         with DBContext() as (_, cursor):
             cursor.execute("""
-                CREATE TABLE IF NOT EXISTS usuarios (
+                CREATE TABLE IF NOT EXISTS usuario (
                     id_usuario INT PRIMARY KEY AUTO_INCREMENT,
                     nome VARCHAR(100) NOT NULL,
                     cpf VARCHAR(11) NOT NULL UNIQUE,
@@ -14,6 +14,7 @@ class Tabelas:
                     email VARCHAR(50),
                     tipo_usuario ENUM('FUNCIONARIO', 'CLIENTE') NOT NULL,
                     senha_hash VARCHAR(255),
+                    otp_codigo VARCHAR(6),
                     otp_ativo BOOLEAN DEFAULT FALSE,
                     otp_expiracao DATETIME
                 );
@@ -29,7 +30,7 @@ class Tabelas:
                     codigo_funcionario VARCHAR(50) NOT NULL UNIQUE,
                     cargo VARCHAR(50),
                     id_supervisor INT,
-                    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
+                    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
                     FOREIGN KEY (id_supervisor) REFERENCES funcionarios(id_funcionario)
                 );
             """)
@@ -41,7 +42,7 @@ class Tabelas:
                     id_cliente INT PRIMARY KEY AUTO_INCREMENT,
                     id_usuario INT,
                     score_credito DECIMAL(5,2) DEFAULT 0,
-                    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+                    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
                 );
             """)
     def create_table_endereco():
@@ -58,7 +59,7 @@ class Tabelas:
                     cidade VARCHAR(100) NOT NULL,
                     estado VARCHAR(100) NOT NULL,
                     complemento VARCHAR(100),
-                    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+                    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
                 );
             """)
     def create_table_agencia():
@@ -73,6 +74,8 @@ class Tabelas:
                     FOREIGN KEY (endereco_id) REFERENCES endereco(id_endereco)
                 );
             """)
+    
+    @staticmethod
     def create_table_conta():
             # Tabela de contas
         with DBContext() as (_, cursor):
@@ -90,6 +93,8 @@ class Tabelas:
                     FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
                 );
             """)
+    
+    @staticmethod
     def create_table_cotnta_poupanca():
             # Conta poupança
         with DBContext() as (_, cursor):
@@ -102,6 +107,8 @@ class Tabelas:
                     FOREIGN KEY (id_conta) REFERENCES conta(id_conta)
                 );
             """)
+        
+    @staticmethod
     def create_table_conta_corrente():
             # Conta corrente
         with DBContext() as (_, cursor):
@@ -115,6 +122,8 @@ class Tabelas:
                     FOREIGN KEY (id_conta) REFERENCES conta(id_conta)
                 );
             """)
+
+    @staticmethod
     def create_table_conta_investimentos():
             # Conta investimento
         with DBContext() as (_, cursor):
@@ -128,6 +137,8 @@ class Tabelas:
                     FOREIGN KEY (id_conta) REFERENCES conta(id_conta)
                 );
             """)
+
+    @staticmethod
     def create_table_transacao():
             # Transações
         with DBContext() as (_, cursor):
@@ -144,6 +155,8 @@ class Tabelas:
                     FOREIGN KEY (id_conta_destino) REFERENCES conta(id_conta)
                 );
             """)
+ 
+    @staticmethod 
     def create_table_auditoria():
             # Auditoria
         with DBContext() as (_, cursor):
@@ -154,9 +167,11 @@ class Tabelas:
                     acao VARCHAR(255),
                     data_hora DATETIME,
                     detalhes TEXT,
-                    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+                    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
                 );
             """)
+
+    @staticmethod
     def create_table_relatorio():
             # Relatório
         with DBContext() as (_, cursor):
@@ -170,3 +185,68 @@ class Tabelas:
                     FOREIGN KEY (id_funcionario) REFERENCES funcionarios(id_funcionario)
                 );
             """)
+
+class procedures:
+ 
+    @staticmethod
+    def criar_trigger_validar_senha():
+        sql = """
+        DROP TRIGGER IF EXISTS validar_senha;
+
+        CREATE TRIGGER validar_senha
+        BEFORE UPDATE ON usuario
+        FOR EACH ROW
+        BEGIN
+            IF NEW.senha_hash REGEXP '^[0-9a-f]{32}$' THEN
+                SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'Senha deve ser atualizada via procedure com validação';
+            END IF;
+        END;
+        """
+        with DBContext() as (_, cursor):
+            for statement in sql.strip().split(';'):
+                if statement.strip():
+                    cursor.execute(statement + ';')
+
+    @staticmethod
+    def gerar_otp():
+        sql = """
+        DROP PROCEDURE IF EXISTS gerar_otp;
+        CREATE PROCEDURE gerar_otp(IN id_usuario INT)
+        BEGIN
+            DECLARE novo_otp VARCHAR(6);
+            SET novo_otp = LPAD(FLOOR(RAND() * 1000000), 6, '0');
+            UPDATE usuario
+            SET
+                otp_codigo = novo_otp,
+                otp_ativo = TRUE,
+                otp_expiracao = NOW() + INTERVAL 5 MINUTE
+            WHERE id_usuario = id_usuario;
+            SELECT novo_otp AS otp;
+        END;
+        """
+        with DBContext() as (_, cursor):
+            for statement in sql.strip().split(';'):
+                if statement.strip():
+                    cursor.execute(statement + ';')
+
+    @staticmethod
+    def invalidar_otp():
+        sql = """
+        DROP PROCEDURE IF EXISTS invalidar_otp;
+        CREATE PROCEDURE invalidar_otp(IN id_usuario INT)
+        BEGIN
+            UPDATE usuario
+            SET
+                otp_codigo = NULL,
+                otp_ativo = FALSE,
+                otp_expiracao = NULL
+            WHERE id_usuario = id_usuario;
+        END;
+        """
+        with DBContext() as (_, cursor):
+            for statement in sql.strip().split(';'):
+                if statement.strip():
+                    cursor.execute(statement + ';')
+
+        

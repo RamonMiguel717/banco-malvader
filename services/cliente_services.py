@@ -40,14 +40,17 @@ class ClienteServices:
         return {"status": "sucesso", "id_usuario": id_usuario}
 
     def get_cliente_by_usuario(id_usuario):
-        cliente = Cliente.get_cliente_by_id(id_usuario)
-        contas = conta.get_contas_by_cliente(cliente['id_cliente'])
-        score = cliente['score_credito']
-        return {
-            'cliente': cliente,
-            'contas': contas,
-            'score': score
-        }
+        try:
+            cliente = Cliente.get_cliente_by_id(id_usuario)
+            contas = conta.get_contas_by_cliente(cliente['id_cliente'])
+            score = cliente['score_credito']
+            return {
+                'cliente': cliente,
+                'contas': contas,
+                'score': score
+            }
+        except Exception as e:
+            print(f"Erro ao identificar cliente: {e}")
 
     def get_cliente_by_cpf(cpf):
         clientes = Cliente.get_cliente_by_cpf(cpf)
@@ -63,5 +66,23 @@ class ClienteServices:
         contas = conta.get_contas_by_cliente(id_cliente)
         return contas
     
-    def listar_clientes():
-        # TODO criar função para detalhar todas as funções do cliente
+
+    def list_clientes():
+        try:
+            clientes_cru = Cliente.listar_clientes_completo()
+            clientes_formatados = []
+
+            for cliente in clientes_cru:
+                clientes_formatados.append({
+                    "id_cliente": cliente["id_cliente"],
+                    "nome": cliente["nome"],
+                    "cpf": cliente["cpf"],
+                    "score_credito": cliente["score_credito"]
+                })
+
+            return clientes_formatados
+
+        except Exception as e:
+            print(f"Erro ao listar clientes: {e}")
+            return []
+

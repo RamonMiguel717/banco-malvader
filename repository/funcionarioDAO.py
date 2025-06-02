@@ -15,7 +15,7 @@ class FuncionarioRepository:
             cursor.execute("""
                 SELECT f.id_funcionario
                 FROM funcionarios f
-                JOIN usuarios u ON f.id_usuario = u.id_usuario
+                JOIN usuario u ON f.id_usuario = u.id_usuario
                 WHERE u.cpf = %s
             """, (cpf_limpo,))
         resultado = cursor.fetchone()
