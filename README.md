@@ -22,7 +22,7 @@ Este projeto tem como objetivo o desenvolvimento de um **Sistema Bancário compl
 | Nome                  | Função                    |
 |-----------------------|---------------------------|
 | Ramon Miguel          | Desenvolvedor             |
-| Eduarda Rita Marques  | Desenvolvedora            |
+| Maria Eduarda Marques | Desenvolvedora            |
 | Rafael Canavarro      | Desenvolvedor             |
 
 ---
@@ -52,5 +52,6 @@ banco_digital/
 ├── services/            # Regras de negócio (Service Layer)
 ├── utils/               # Funções auxiliares (ex: segurança)
 ├── views/               # Interfaces gráficas (em construção)
+├── tests/               # Testes unitários 
 ├── main.py              # Ponto de entrada do sistema
 └── README.md            # Documentação do projeto
