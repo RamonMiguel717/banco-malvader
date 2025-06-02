@@ -1,4 +1,7 @@
-from conexao import DBContext
+# TODO: definir uma classe para agrupar os métodos
+# FIXME: Decoradores @staticmethod não podem ser usados fora de uma classe.
+
+from .conexao import DBContext
 from utils import auxiliares
 
 @staticmethod
@@ -40,8 +43,8 @@ def get_dados_completos_cliente(id_cliente):
     with DBContext() as (_, cursor):
         cursor.execute("""
             SELECT u.nome, u.cpf, u.data_nascimento, u.telefone, u.tipo_usuario,
-                   e.cep, e.local, e.numero_casa, e.bairro, e.cidade, e.estado,
-                   c.score_credito
+                    e.cep, e.local, e.numero_casa, e.bairro, e.cidade, e.estado,
+                    c.score_credito
             FROM cliente c
             JOIN usuario u ON c.id_usuario = u.id_usuario
             JOIN endereco e ON u.id_usuario = e.id_usuario
@@ -95,15 +98,13 @@ def delete_cliente(id_cliente):
             raise Exception("Não é possível apagar o cliente, ainda existem contas ativas.")
         
         cursor.execute("""
-
         SELECT id_usuario FROM cliente
-        WHERE id_clietne = %s
-        """,(id_cliente))
+        WHERE id_cliente = %s
+        """, (id_cliente,))
         usuario = cursor.fetchone
         if not usuario:
             raise Exception("Cliente não encontrado.")
         id_usuario = usuario['id_usuario']
 
-        cursor.execute("DELETE FROM cliente WHERE id_cliente = %s",{id_cliente,})
+        cursor.execute("DELETE FROM cliente WHERE id_cliente = %s",(id_cliente,))
         cursor.execute("DELETE FROM usuario WHERE id_usuario = %s",(id_usuario,))
-        

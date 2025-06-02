@@ -1,4 +1,4 @@
-from conexao import DBContext
+from .conexao import DBContext
 
 class ContaRepository:
     @staticmethod
@@ -9,7 +9,7 @@ class ContaRepository:
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
             """, (numero_conta, id_agencia, saldo, tipo_conta, id_cliente, data_abertura, status))
             
- 
+
     @staticmethod
     def get_contas_by_cliente(id_cliente):
         with DBContext() as (conn,cursor):

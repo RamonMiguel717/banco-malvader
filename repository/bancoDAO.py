@@ -2,9 +2,8 @@ import mysql.connector
 from repository.conexao import obter_conexao
 from mysql.connector import errorcode
 from dotenv import load_dotenv
-from conexao import DBContext
-
-
+from .conexao import DBContext
+from repository.tabelasDAO import Tabelas as T
 
 load_dotenv()
 
@@ -31,7 +30,7 @@ def criar_banco_e_tabelas():
             T.create_table_endereco()
             T.create_table_agencia()
             T.create_table_conta()
-            T.create_table_cotnta_poupanca()
+            T.create_table_conta_poupanca()
             T.create_table_conta_corrente()
             T.create_table_conta_investimentos()
             T.create_table_transacao()
