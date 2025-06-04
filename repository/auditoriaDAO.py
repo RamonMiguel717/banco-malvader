@@ -1,4 +1,4 @@
-from conexao import DBContext
+from repository.conexao import DBContext
 
 class AuditoriaRepository:
     @staticmethod

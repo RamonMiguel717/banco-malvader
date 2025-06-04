@@ -1,4 +1,5 @@
-from conexao import DBContext
+from .conexao import DBContext
+
 
 class Tabelas:
 
@@ -95,7 +96,7 @@ class Tabelas:
             """)
     
     @staticmethod
-    def create_table_cotnta_poupanca():
+    def create_table_conta_poupanca():
             # Conta poupança
         with DBContext() as (_, cursor):
             cursor.execute("""
