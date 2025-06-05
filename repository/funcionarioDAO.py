@@ -3,13 +3,14 @@ from utils import auxiliares
 
 class FuncionarioRepository:
     @staticmethod
-    def insert_funcionarios(id_usuario,codigo_funcionario,cargo,id_supervisor):
-        codigo_funcionario = auxiliares.gerador_codigo_funcionario(id_usuario,cargo)
+    def insert_funcionarios(id_usuario, cargo, id_supervisor):
+        codigo_funcionario = auxiliares.gerador_codigo_funcionario(id_usuario, cargo)
         with DBContext() as (_, cursor):
             cursor.execute("""
-                INSERT INTO funcionarios (id_usuario, codigo_funcionario,cargo,id_supervisor VALUES (%s,%s,%s))""",(id_usuario,codigo_funcionario,cargo,id_supervisor)
-                ) 
-                # TODO: Adicionar retorno confirmando a inserção (ex.: id do novo funcionário
+                INSERT INTO funcionarios (id_usuario, codigo_funcionario, cargo, id_supervisor)
+                VALUES (%s, %s, %s, %s)
+            """, (id_usuario, codigo_funcionario, cargo, id_supervisor))
+            # TODO: Adicionar retorno confirmando a inserção (ex.: id do novo funcionário
 
     @staticmethod
     def find_funcionario_id_by_cpf(cpf: str):

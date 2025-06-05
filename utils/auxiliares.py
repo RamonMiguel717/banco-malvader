@@ -4,16 +4,12 @@ from repository.funcionarioDAO import FuncionarioRepository
 import re
 
 # TODO adicionar validações ao codigo, além da trataiva de erros
-def gerador_codigo_funcionario(id_usuario: str, cargo: str = None):
+@staticmethod
+def gerador_codigo_funcionario(id_usuario: str, cargo):
     usuario = get_usuario_by_id(id_usuario)
     cpf = usuario['cpf']
     data_nascimento = usuario['data_nascimento']
 
-    if cargo is None:
-        funcionario = FuncionarioRepository.get_funcionario_by_usuario(id_usuario)
-        cargo = funcionario['cargo']
-
-    # Limpar CPF e extrair primeiros dígitos
     cpf_limpo = limpar_cpf(cpf)
     cpf_primeiros = cpf_limpo[:3]
 
