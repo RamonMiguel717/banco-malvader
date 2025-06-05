@@ -62,7 +62,16 @@ def list_clientes():
             JOIN usuario u ON c.id_usuario = u.id_usuario
         """)
         return cursor.fetchall()
-
+    
+@staticmethod
+def listar_clientes_completo():
+    with DBContext() as (_, cursor):
+        cursor.execute("""
+            SELECT c.id_cliente, u.nome, u.cpf, u.data_nascimento, u.telefone, c.score_credito
+            FROM cliente c
+            JOIN usuario u ON c.id_usuario = u.id_usuario
+        """)
+        return cursor.fetchall()
 
 @staticmethod
 def update_cliente(id_cliente,novo_score):

@@ -1,22 +1,37 @@
 from datetime import datetime
+from repository.usuarioDAO import get_usuario_by_id
+from repository.funcionarioDAO import FuncionarioRepository
 import re
 
+# TODO adicionar validações ao codigo, além da trataiva de erros
+def gerador_codigo_funcionario(id_usuario: str, cargo: str = None):
+    usuario = get_usuario_by_id(id_usuario)
+    cpf = usuario['cpf']
+    data_nascimento = usuario['data_nascimento']
 
-@staticmethod
-def gerador_codigo_funcionario(id_usuario: str, cpf: str,data_nascimento:str,cargo:str):
-    # TODO Adicionar a função para buscar as informações do funcionario
+    if cargo is None:
+        funcionario = FuncionarioRepository.get_funcionario_by_usuario(id_usuario)
+        cargo = funcionario['cargo']
 
+    # Limpar CPF e extrair primeiros dígitos
     cpf_limpo = limpar_cpf(cpf)
     cpf_primeiros = cpf_limpo[:3]
 
-    data = datetime.strptime(data_nascimento, "%d/%m%y")
+    # Garantir que data esteja no formato datetime
+    if isinstance(data_nascimento, str):
+        data = datetime.strptime(data_nascimento, "%Y-%m-%d")
+    else:
+        data = data_nascimento
+
     mes_ano = data.strftime("%m%y")
 
-    if cargo.upper().strip() == "GERENTE":
+    # Código por cargo
+    cargo = cargo.upper().strip()
+    if cargo == "GERENTE":
         nivel = "001"
-    elif cargo.upper().strip() == "ATENDENTE":
+    elif cargo == "ATENDENTE":
         nivel = "002"
-    elif cargo.upper().strip() == "ESTAGIARIO":
+    elif cargo == "ESTAGIARIO":
         nivel = "003"
     else:
         nivel = "004"

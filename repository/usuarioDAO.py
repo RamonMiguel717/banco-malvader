@@ -3,6 +3,7 @@ from utils import auxiliares
 from datetime import datetime
 
 
+
 @staticmethod
 def insert_usuario(nome, cpf, data_nascimento, telefone,email, tipo_usuario, senha_hash, otp_ativo=False, otp_expiracao=None):
     with DBContext() as (_, cursor):
@@ -25,7 +26,7 @@ def get_usuario_by_cpf(cpf):
     with DBContext() as (_, cursor):
         cursor.execute("""
             SELECT * FROM usuario
-            WHERE id_cliente = %s
+            WHERE cpf = %s
         """, (cpf,))
         resultado = cursor.fetchone()
     return resultado  
@@ -48,13 +49,33 @@ def list_usuario():
         
 
 @staticmethod
-def update_usuario(id_usuario, nome, telefone, tipo_usuario):
+def update_usuario(id_usuario, telefone=None, email=None, senha_hash=None):
+    campos = []
+    valores = []
+
+    if telefone:
+        campos.append("telefone = %s")
+        valores.append(telefone)
+    if email:
+        campos.append("email = %s")
+        valores.append(email)
+    if senha_hash:
+        campos.append("senha_hash = %s")
+        valores.append(senha_hash)
+
+    if not campos:
+        return 
+
+    valores.append(id_usuario)
+
+    query = f"""
+        UPDATE usuario
+        SET {', '.join(campos)}
+        WHERE id_usuario = %s
+    """
+
     with DBContext() as (_, cursor):
-        cursor.execute("""
-            UPDATE usuario
-            SET nome = %s, telefone = %s, tipo_usuario = %s
-            WHERE id_usuario = %s
-        """, (nome, telefone, tipo_usuario, id_usuario))
+        cursor.execute(query, tuple(valores))
 
 @staticmethod
 def update_senha(id_usuario,nova_senha_hash):
@@ -108,8 +129,9 @@ def invalidar_otp(id_usuario):
 
 @staticmethod
 def registrar_login(id_usuario, sucesso: bool):
-    with DBContext() as (_, cursor):
-        cursor.execute("""
+    try:
+        with DBContext() as (_, cursor):
+            cursor.execute("""
             INSERT INTO auditoria (id_usuario, acao, data_hora, detalhes)
             VALUES (%s, %s, NOW(), %s)
         """, (
@@ -117,6 +139,8 @@ def registrar_login(id_usuario, sucesso: bool):
             'LOGIN',
             f'{{"resultado": "{ "SUCESSO" if sucesso else "FALHA" }"}}'
         ))
+    except Exception as e:
+        raise Exception(f"Erro ao registrar login na auditoria: {e}")
 
 @staticmethod
 def tentativas_recentes_falhas(id_usuario):
