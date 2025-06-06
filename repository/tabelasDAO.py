@@ -97,26 +97,23 @@ class Tabelas:
     
     @staticmethod
     def create_table_conta_poupanca():
-            # Conta poupança
         with DBContext() as (_, cursor):
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS conta_poupanca (
-                    id_conta_poupanca INT PRIMARY KEY AUTO_INCREMENT,
-                    id_conta INT UNIQUE,
+                    id_conta INT PRIMARY KEY,
                     taxa_rendimento DECIMAL(5, 2),
                     ultimo_rendimento DATE,
                     FOREIGN KEY (id_conta) REFERENCES conta(id_conta)
                 );
             """)
+
         
     @staticmethod
     def create_table_conta_corrente():
-            # Conta corrente
         with DBContext() as (_, cursor):
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS conta_corrente (
-                    id_conta_corrente INT PRIMARY KEY AUTO_INCREMENT,
-                    id_conta INT UNIQUE,
+                    id_conta INT PRIMARY KEY,
                     limite DECIMAL(10, 2),
                     data_vencimento DATE,
                     taxa_manutencao DECIMAL(5, 2),
@@ -125,19 +122,18 @@ class Tabelas:
             """)
 
     @staticmethod
-    def create_table_conta_investimentos():
-            # Conta investimento
+    def create_table_conta_investimento():
         with DBContext() as (_, cursor):
             cursor.execute("""
-                CREATE TABLE IF NOT EXISTS conta_investimentos (
-                    id_conta_investimento INT PRIMARY KEY AUTO_INCREMENT,
-                    id_conta INT UNIQUE,
+                CREATE TABLE IF NOT EXISTS conta_investimento (
+                    id_conta INT PRIMARY KEY,
                     perfil_risco VARCHAR(50),
                     valor_minimo DECIMAL(10, 2),
                     taxa_rendimento_base DECIMAL(5, 2),
                     FOREIGN KEY (id_conta) REFERENCES conta(id_conta)
                 );
             """)
+
 
     @staticmethod
     def create_table_transacao():

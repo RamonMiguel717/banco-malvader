@@ -83,6 +83,7 @@ class ClienteServices:
         except Exception as e:
             raise ValidacaoNegocioError(f"Não foi possível listar os clientes: {e}")
     
+
     @staticmethod
     def recalcular_score(id_cliente):
         try:

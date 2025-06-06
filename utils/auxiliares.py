@@ -1,10 +1,9 @@
 from datetime import datetime
 from repository.usuarioDAO import get_usuario_by_id
-from repository.funcionarioDAO import FuncionarioRepository
+import random
 import re
 
 # TODO adicionar validações ao codigo, além da trataiva de erros
-@staticmethod
 def gerador_codigo_funcionario(id_usuario: str, cargo):
     usuario = get_usuario_by_id(id_usuario)
     cpf = usuario['cpf']
@@ -34,13 +33,13 @@ def gerador_codigo_funcionario(id_usuario: str, cargo):
 
     return f"{cpf_primeiros}{mes_ano}{nivel}"
 
-@staticmethod   
+
 def limpar_cpf(cpf:str):
     cpf_limpo =''.join(filter(str.isdigit, cpf))
     return cpf_limpo
 
 
-@staticmethod 
+ 
 def verificar_sequencia_numerica(senha,tamanho_min = 1):
     numeros = ''.join(filter(str.isdigit,senha))
     if len(numeros) < tamanho_min:
@@ -58,7 +57,37 @@ def verificar_sequencia_numerica(senha,tamanho_min = 1):
                 return True
     return True
 
-@staticmethod # -> tira simbolos e espaços
+ # -> tira simbolos e espaços
 def tratar_data(data: str) -> str:
     return re.sub(r'[^0-9]', '', data)
 
+
+def gerar_numero_conta():
+    # Gera um número base com 8 dígitos
+    numero_base = ''.join(str(random.randint(0, 9)) for _ in range(8))
+    digito = calcular_digito_luhn(numero_base)
+    return f"{numero_base}-{digito}"
+
+def calcular_digito_luhn(numero_str):
+    soma = 0
+    reverso = numero_str[::-1]
+    for i, char in enumerate(reverso):
+        n = int(char)
+        if i % 2 == 0:
+            n *= 2
+            if n > 9:
+                n -= 9
+        soma += n
+    digito = (10 - (soma % 10)) % 10
+    return str(digito)
+
+
+def calcular_limite_por_score(score):
+    if score >= 90:
+        return 5000.00
+    elif score >= 70:
+        return 2000.00
+    elif score >= 50:
+        return 1000.00
+    else:
+        return 500.00

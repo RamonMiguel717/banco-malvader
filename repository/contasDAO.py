@@ -12,7 +12,7 @@ class ContaRepository:
 
     @staticmethod
     def get_contas_by_cliente(id_cliente):
-        with DBContext() as (conn,cursor):
+        with DBContext() as (_,cursor):
             cursor.execute("""
                 SELECT * FROM conta 
                 WHERE id_cliente = %s
@@ -20,6 +20,14 @@ class ContaRepository:
 """,(id_cliente,))
         return cursor.fetchall()
 
+    @staticmethod
+    def get_contas_by_conta(id_conta):
+        with DBContext() as (_,cursor):
+            cursor.execute("""
+                SELECT * FROM conta
+                WHERE id_conta = %s
+""",(id_conta,))
+        return cursor.fetchall()
 
     @staticmethod
     def list_contas():
@@ -55,14 +63,14 @@ class ContaPoupancaRepository:
             
 
     @staticmethod
-    def update_conta_poupanca(id_conta_poupanca, taxa_rendimento, ultimo_rendimento):
+    def update_conta_poupanca(id_conta, taxa_rendimento, ultimo_rendimento):
         with DBContext() as (_, cursor):
             cursor.execute("""
                 UPDATE conta_poupanca
                 SET taxa_rendimento = %s, ultimo_rendimento = %s
-                WHERE id_conta_poupanca = %s
-            """, (taxa_rendimento, ultimo_rendimento, id_conta_poupanca))
-            
+                WHERE id_conta = %s
+            """, (taxa_rendimento, ultimo_rendimento, id_conta))
+                
 
 class ContaCorrenteRepository:
     @staticmethod
@@ -75,13 +83,13 @@ class ContaCorrenteRepository:
             
 
     @staticmethod
-    def update_conta_corrente(id_conta_corrente, limite, data_vencimento, taxa_manutencao):
+    def update_conta_corrente(id_conta, limite, data_vencimento, taxa_manutencao):
         with DBContext() as (_, cursor):
             cursor.execute("""
                 UPDATE conta_corrente
                 SET limite = %s, data_vencimento = %s, taxa_manutencao = %s
-                WHERE id_conta_corrente = %s
-            """, (limite, data_vencimento, taxa_manutencao, id_conta_corrente))
+                WHERE id_conta = %s
+            """, (limite, data_vencimento, taxa_manutencao, id_conta))
             
 
 class ContaInvestimentoRepository:
@@ -89,20 +97,20 @@ class ContaInvestimentoRepository:
     def insert_conta_investimento(id_conta, perfil_risco, valor_minimo, taxa_rendimento_base):
         with DBContext() as (_, cursor):
             cursor.execute("""
-                INSERT INTO conta_investimentos (id_conta, perfil_risco, valor_minimo, taxa_rendimento_base)
+                INSERT INTO conta_investimento (id_conta, perfil_risco, valor_minimo, taxa_rendimento_base)
                 VALUES (%s, %s, %s, %s)
             """, (id_conta, perfil_risco, valor_minimo, taxa_rendimento_base))
+
             
 
     @staticmethod
-    def update_conta_investimento(id_conta_investimento, perfil_risco, valor_minimo, taxa_rendimento_base):
+    def update_conta_investimento(id_conta, perfil_risco, valor_minimo, taxa_rendimento_base):
         with DBContext() as (_, cursor):
             cursor.execute("""
-                UPDATE conta_investimentos
+                UPDATE conta_investimento
                 SET perfil_risco = %s, valor_minimo = %s, taxa_rendimento_base = %s
-                WHERE id_conta_investimento = %s
-            """, (perfil_risco, valor_minimo, taxa_rendimento_base, id_conta_investimento))
-            
+                WHERE id_conta = %s
+        """, (perfil_risco, valor_minimo, taxa_rendimento_base, id_conta))
 
 class TransacaoRepository:
     @staticmethod
