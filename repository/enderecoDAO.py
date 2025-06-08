@@ -1,32 +1,55 @@
 from repository.conexao import DBContext
-from utils import auxiliares
+from model.endereco_model import Endereco
 
 class EnderecoRepository:
-    @staticmethod
-    def insert_endereco(id_usuario, cep, local, numero_casa, bairro, cidade, estado, complemento):
-        with DBContext() as (_, cursor):
-            cursor.execute("""
-                INSERT INTO endereco (id_usuario, cep, local, numero_casa, bairro, cidade, estado, complemento)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-            """, (id_usuario, cep, local, numero_casa, bairro, cidade, estado, complemento))
 
     @staticmethod
-    def list_enderecos():
+    def insert_endereco(endereco: Endereco):
+        with DBContext() as (_, cursor):
+            cursor.execute("""
+                INSERT INTO endereco (
+                    id_usuario, cep, local, numero_casa, bairro,
+                    cidade, estado, complemento
+                )
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                endereco.id_usuario,
+                endereco.cep,
+                endereco.local,
+                endereco.numero_casa,
+                endereco.bairro,
+                endereco.cidade,
+                endereco.estado,
+                endereco.complemento
+            ))
+
+    @staticmethod
+    def list_enderecos() -> list[Endereco]:
         with DBContext() as (_, cursor):
             cursor.execute("SELECT * FROM endereco")
-            dados = cursor.fetchall()
-            colunas = [desc[0] for desc in cursor.description]
-            return [dict(zip(colunas, linha)) for linha in dados]
+            resultados = cursor.fetchall()
+            return [Endereco(**row) for row in resultados]
 
     @staticmethod
-    def update_endereco(id_endereco, cep, local, numero_casa, bairro, cidade, estado, complemento):
+    def update_endereco(endereco: Endereco):
         with DBContext() as (_, cursor):
             cursor.execute("""
-                UPDATE endereco SET cep=%s, local=%s, numero_casa=%s, bairro=%s,
-                cidade=%s, estado=%s, complemento=%s WHERE id_endereco=%s
-            """, (cep, local, numero_casa, bairro, cidade, estado, complemento, id_endereco))
+                UPDATE endereco
+                SET cep = %s, local = %s, numero_casa = %s, bairro = %s,
+                    cidade = %s, estado = %s, complemento = %s
+                WHERE id_endereco = %s
+            """, (
+                endereco.cep,
+                endereco.local,
+                endereco.numero_casa,
+                endereco.bairro,
+                endereco.cidade,
+                endereco.estado,
+                endereco.complemento,
+                endereco.id_endereco
+            ))
 
     @staticmethod
-    def delete_endereco(id_endereco):
+    def delete_endereco(id_endereco: int):
         with DBContext() as (_, cursor):
             cursor.execute("DELETE FROM endereco WHERE id_endereco = %s", (id_endereco,))

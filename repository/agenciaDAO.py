@@ -15,7 +15,7 @@ class AgenciaRepository:
             cursor.execute("SELECT * FROM agencia")
             return cursor.fetchall()
 
-    @staticmethod
+    @staticmethod # TODO corrigir para que nem todas as informações sejam obrigatórias
     def update_agencia(id_agencia, nome, codigo_agencia):
         with DBContext() as (_, cursor):
             cursor.execute("""

@@ -1,5 +1,17 @@
-from .conexao import DBContext
+"""
+TabelasDao é a criação de todas as tabelas a serem utilizadas no banco de dados, trabalha por meio de uma chamada de "Cursor"
+que basicamente é uma emulação de chamadas SQL por meio de Python (não se preocupe com isso)
 
+DBContext retorna 2 argumentos:
+    - Comment (inutilizado, foi substituído por " _ ")
+    - Cursor -> O que você utilizará para fazer chamadas SQL e manipulações no banco de dados.
+
+Além da criação das tabelas, também criei os Triggers em uma classe própria chamada Procedures
+não é a melhor das organizações mas é o que funciona no momento, pode tomar a liberdade de organizar da maneira que achar melhor
+só garanta que refatorou o codigo,
+"""
+
+from .conexao import DBContext
 
 class Tabelas:
 
@@ -245,5 +257,7 @@ class procedures:
             for statement in sql.strip().split(';'):
                 if statement.strip():
                     cursor.execute(statement + ';')
+
+    #TODO criar um procedure para calcular o SCORE DE CRÉDITO
 
         

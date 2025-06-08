@@ -1,4 +1,4 @@
-from repository import usuarioDAO as UsuarioDAO
+from repository.usuarioDAO import UsuarioRepository as usuario
 from utils.validator import Validator
 from utils.criptografia_senha import criptografada
 from utils.exceptions import ValidacaoNegocioError, AcessoNegadoError
@@ -8,11 +8,15 @@ from datetime import datetime
 class UsuarioServices:
 
     @staticmethod
+    # Função de validação, identifica e formata o erro caso exista um.
     def _validar(label, resultado):
         if not resultado['valido']:
             raise ValidacaoNegocioError(f"{label} inválido: {resultado['erros']}")
 
     @staticmethod
+    # Atualiza os dados do cliente a partir do parâmetro passado
+    # Necessita de uma DECLARAÇÃO ESPECIFICA de qual informação irá ser atualizada
+    # o unico parâmetro obrigatório é o id do usuário
     def atualizar_dados(id_usuario, telefone=None, email=None, senha=None):
         try:
             if telefone:
@@ -23,25 +27,28 @@ class UsuarioServices:
                 UsuarioServices._validar("Senha", Validator.validate_senha(senha))
                 senha = criptografada(senha)
 
-            UsuarioDAO.update_usuario(id_usuario, telefone=telefone, email=email, senha_hash=senha)
+            usuario.update_usuario(id_usuario, telefone=telefone, email=email, senha_hash=senha)
 
             return {"status": "usuário atualizado"}
         except Exception as e:
             raise ValidacaoNegocioError(f"Erro ao atualizar dados do usuário: {e}")
 
     @staticmethod
+    # Função de autentificação de Login 
     def autenticar_usuario(cpf, senha):
         try:
-            usuario = UsuarioDAO.get_usuario_by_cpf(cpf)
+            #Encontra as informações do usuário e as armazena em uma variavel para ser desempacotado depois
+            usuario = usuario.get_usuario_by_cpf(cpf)
             if not usuario:
                 raise AcessoNegadoError("Usuário não encontrado")
 
             senha_criptografada = criptografada(senha)
             if usuario["senha_hash"] != senha_criptografada:
-                UsuarioDAO.registrar_login(usuario["id_usuario"], sucesso=False)
+                usuario.registrar_login(usuario["id_usuario"], sucesso=False)
                 raise AcessoNegadoError("Senha incorreta")
 
-            UsuarioDAO.registrar_login(usuario["id_usuario"], sucesso=True)
+            # TODO registrar login é uma função em integração com a auditoria -> Ainda não funciona
+            usuario.registrar_login(usuario["id_usuario"], sucesso=True)
             return usuario
 
         except Exception as e:
@@ -50,14 +57,14 @@ class UsuarioServices:
     @staticmethod
     def gerar_otp(id_usuario):
         try:
-            return UsuarioDAO.gerar_otp(id_usuario)
+            return usuario.gerar_otp(id_usuario)
         except Exception as e:
             raise ValidacaoNegocioError(f"Erro ao gerar OTP: {e}")
 
     @staticmethod
     def validar_otp(id_usuario, otp_digitado):
         try:
-            if UsuarioDAO.validar_otp(id_usuario, otp_digitado):
+            if usuario.validar_otp(id_usuario, otp_digitado):
                 return {"status": "OTP válido"}
             else:
                 raise AcessoNegadoError("OTP inválido ou expirado")
@@ -67,14 +74,14 @@ class UsuarioServices:
     @staticmethod
     def invalidar_otp(id_usuario):
         try:
-            UsuarioDAO.invalidar_otp(id_usuario)
+            usuario.invalidar_otp(id_usuario)
         except Exception as e:
             raise ValidacaoNegocioError(f"Erro ao invalidar OTP: {e}")
 
     @staticmethod
     def tentativas_invalidas_recentemente(id_usuario):
         try:
-            total = UsuarioDAO.tentativas_recentes_falhas(id_usuario)
+            total = usuario.tentativas_recentes_falhas(id_usuario)
             return total
         except Exception as e:
             raise ValidacaoNegocioError(f"Erro ao verificar tentativas inválidas: {e}")

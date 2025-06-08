@@ -7,6 +7,7 @@ from repository.tabelasDAO import Tabelas as T
 
 load_dotenv()
 
+# Função que trata os erros de SQL
 def tratar_erro_mysql(err):
     if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
         print("Erro de acesso: usuário ou senha incorretos")
@@ -20,6 +21,8 @@ def criar_banco():
         cursor.execute("CREATE DATABASE IF NOT EXISTS banco_malvader")
         cursor.execute("USE banco_malvader")
 
+# Executa tabelasDAO além da criação do próprio banco de dados
+# Será utilizado SOMENTE no inicio do projeto
 def criar_banco_e_tabelas():
     from repository.tabelasDAO import Tabelas as T
     try:
@@ -39,4 +42,6 @@ def criar_banco_e_tabelas():
 
     except mysql.connector.Error as err:
         tratar_erro_mysql(err)
+
+# TODO: Criar uma função para apagar tudo do banco de dados
 

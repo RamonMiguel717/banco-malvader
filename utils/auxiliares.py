@@ -1,9 +1,15 @@
-from datetime import datetime
+from datetime import datetime, date
 from repository.usuarioDAO import get_usuario_by_id
+from repository.contasDAO import ContaRepository as conta, ContaCorrenteRepository as CC
+from dateutil import relativedelta
 import random
 import re
 
 # TODO adicionar validações ao codigo, além da trataiva de erros
+
+"""
+O codigo do funcionário é uma combinação das informações pessoais do funcionário além do seu cargo dentro do Banco
+"""
 def gerador_codigo_funcionario(id_usuario: str, cargo):
     usuario = get_usuario_by_id(id_usuario)
     cpf = usuario['cpf']
@@ -33,13 +39,13 @@ def gerador_codigo_funcionario(id_usuario: str, cargo):
 
     return f"{cpf_primeiros}{mes_ano}{nivel}"
 
-
+# Tira qualquer informação não numérica do CPF inserido 
 def limpar_cpf(cpf:str):
     cpf_limpo =''.join(filter(str.isdigit, cpf))
     return cpf_limpo
 
 
- 
+ # Parte das funções de validação de senha, identifica caso exista uma sequência numérica (123,321,432,987...)
 def verificar_sequencia_numerica(senha,tamanho_min = 1):
     numeros = ''.join(filter(str.isdigit,senha))
     if len(numeros) < tamanho_min:
@@ -57,7 +63,7 @@ def verificar_sequencia_numerica(senha,tamanho_min = 1):
                 return True
     return True
 
- # -> tira simbolos e espaços
+ # -> tira simbolos e espaços da data
 def tratar_data(data: str) -> str:
     return re.sub(r'[^0-9]', '', data)
 
@@ -67,7 +73,7 @@ def gerar_numero_conta():
     numero_base = ''.join(str(random.randint(0, 9)) for _ in range(8))
     digito = calcular_digito_luhn(numero_base)
     return f"{numero_base}-{digito}"
-
+# É uma das camadas de segurança requerida no documento
 def calcular_digito_luhn(numero_str):
     soma = 0
     reverso = numero_str[::-1]
@@ -81,7 +87,7 @@ def calcular_digito_luhn(numero_str):
     digito = (10 - (soma % 10)) % 10
     return str(digito)
 
-
+# Calcula o limite da conta
 def calcular_limite_por_score(score):
     if score >= 90:
         return 5000.00
@@ -91,3 +97,17 @@ def calcular_limite_por_score(score):
         return 1000.00
     else:
         return 500.00
+
+def calcular_data_vencimento(data_ultima_transaacao: date):
+    return data_ultima_transaacao + relativedelta(months = 6)
+
+def atualizar_data_vencimento(id_conta):
+    try:
+        data_ultima = conta.get_data_ultima_transacao(id_conta)
+        if not data_ultima:
+            return
+
+        nova_data = calcular_data_vencimento(data_ultima.date())
+        CC.update_data_vencimento(id_conta,nova_data)
+    except Exception as e:
+        raise Exception(f"Não foi possível atualizar a data de vencimento:{e}")
