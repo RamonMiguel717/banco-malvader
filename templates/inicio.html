@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Início</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <div class="min-h-screen flex flex-col">
+        <!-- Cabeçalho -->
+        <header class="bg-black text-white p-4 shadow-md">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold">Banco Malvader</h1>
+                <div class="flex space-x-4">
+                    <button class="hover:text-gray-300">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Conteúdo Principal -->
+        <main class="flex-grow container mx-auto p-4 flex flex-col items-center justify-center">
+            <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md text-center">
+                <h2 class="text-3xl font-bold mb-6">Bem-vindo ao Banco Malvader</h2>
+                <p class="mb-8 text-gray-600">Selecione uma opção para continuar</p>
+                
+                <div class="space-y-4">
+                    <a href="login.html" class="block w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 transition duration-300">
+                        <i class="fas fa-sign-in-alt mr-2"></i> Acessar Banco Malvader
+                    </a>
+                    <a href="sistema.html" class="block w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 transition duration-300">
+                        <i class="fas fa-info-circle mr-2"></i> Sobre o Banco Malvader
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <!-- Rodapé -->
+        <footer class="bg-black text-white p-4 text-center">
+            <p>© 2023 Banco Malvader. Todos os direitos reservados.</p>
+        </footer>
+    </div>
+</body>
+</html>

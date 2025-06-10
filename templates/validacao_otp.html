@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validação OTP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <div class="min-h-screen flex flex-col">
+        <!-- Cabeçalho -->
+        <header class="bg-black text-white p-4 shadow-md">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold">Sistema - Validação</h1>
+                <a href="login.html" class="hover:text-gray-300">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+        </header>
+
+        <!-- Conteúdo Principal -->
+        <main class="flex-grow container mx-auto p-4 flex items-center justify-center">
+            <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+                <div class="text-center mb-6">
+                    <i class="fas fa-shield-alt text-4xl text-black mb-4"></i>
+                    <h2 class="text-2xl font-bold">Verificação em Duas Etapas</h2>
+                    <p class="text-gray-600 mt-2">Insira o código de 6 dígitos enviado para o seu e-mail/celular</p>
+                </div>
+                
+                <form class="space-y-6">
+                    <div class="flex justify-center space-x-2">
+                        <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+                        <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+                        <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+                        <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+                        <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+                        <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+                    </div>
+                    
+                    <div class="text-center text-sm text-gray-600">
+                        <p>Não recebeu o código? <a href="#" class="text-black font-semibold">Reenviar</a></p>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 transition duration-300">
+                        <i class="fas fa-check-circle mr-2"></i> Validar Código
+                    </button>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <button class="text-gray-600 hover:text-black">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Cancelar e Voltar
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Rodapé -->
+        <footer class="bg-black text-white p-4 text-center">
+            <p>© 2023 Sistema. Todos os direitos reservados.</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abertura de Conta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-black text-white p-4 shadow-md">
+            <div class="container mx-auto flex justify-between items-center">
+                <div>
+                    <h1 class="text-xl font-bold">Abertura de Conta</h1>
+                    <p class="text-sm text-gray-300">Funcionário: João Silva | Matrícula: 12345</p>
+                </div>
+                <a href="menu_funcionario.html" class="hover:text-gray-300">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </a>
+            </div>
+        </header>
+
+        <main class="flex-grow container mx-auto p-4">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden p-6">
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2">Tipo de Conta</label>
+                    <div class="grid grid-cols-3 gap-4">
+                        <button id="btnPoupanca" class="p-4 border border-gray-300 rounded-lg hover:border-black focus:bg-gray-100">
+                            <i class="fas fa-piggy-bank text-2xl mb-2"></i>
+                            <p class="font-semibold">Poupança</p>
+                        </button>
+                        <button id="btnCorrente" class="p-4 border border-gray-300 rounded-lg hover:border-black focus:bg-gray-100">
+                            <i class="fas fa-wallet text-2xl mb-2"></i>
+                            <p class="font-semibold">Corrente</p>
+                        </button>
+                        <button id="btnInvestimento" class="p-4 border border-gray-300 rounded-lg hover:border-black focus:bg-gray-100">
+                            <i class="fas fa-chart-line text-2xl mb-2"></i>
+                            <p class="font-semibold">Investimento</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Formulário Dinâmico -->
+                <form id="formAbertura" class="space-y-4">
+                    <!-- Dados Básicos -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="cpf" class="block text-gray-700 mb-2">CPF do Cliente</label>
+                            <input type="text" id="cpf" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="000.000.000-00" required>
+                        </div>
+                        <div>
+                            <label for="agencia" class="block text-gray-700 mb-2">Agência</label>
+                            <input type="text" id="agencia" class="w-full p-3 border border-gray-300 rounded-lg" value="0001" readonly>
+                        </div>
+                    </div>
+
+                    <!-- Seção Poupança -->
+                    <div id="secaoPoupanca" class="hidden space-y-4">
+                        <div>
+                            <label for="taxaRendimento" class="block text-gray-700 mb-2">Taxa de Rendimento (%)</label>
+                            <input type="number" step="0.01" id="taxaRendimento" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Ex: 0.5">
+                        </div>
+                    </div>
+
+                    <!-- Seção Corrente -->
+                    <div id="secaoCorrente" class="hidden space-y-4">
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <label for="limiteInicial" class="block text-gray-700 mb-2">Limite Inicial (R$)</label>
+                                <input type="text" id="limiteInicial" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="0,00">
+                            </div>
+                            <div>
+                                <label for="taxaManutencao" class="block text-gray-700 mb-2">Taxa Mensal (%)</label>
+                                <input type="number" step="0.01" id="taxaManutencao" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Ex: 1.5">
+                            </div>
+                            <div>
+                                <label for="vencimentoFatura" class="block text-gray-700 mb-2">Vencimento</label>
+                                <input type="number" min="1" max="31" id="vencimentoFatura" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Dia do mês">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seção Investimento -->
+                    <div id="secaoInvestimento" class="hidden space-y-4">
+                        <div>
+                            <label for="perfilRisco" class="block text-gray-700 mb-2">Perfil de Risco</label>
+                            <select id="perfilRisco" class="w-full p-3 border border-gray-300 rounded-lg">
+                                <option value="conservador">Conservador</option>
+                                <option value="moderado">Moderado</option>
+                                <option value="arrojado">Arrojado</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="valorMinimo" class="block text-gray-700 mb-2">Valor Mínimo (R$)</label>
+                            <input type="text" id="valorMinimo" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="0,00">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 mt-6">
+                        <i class="fas fa-check-circle mr-2"></i> Abrir Conta
+                    </button>
+                </form>
+            </div>
+        </main>
+
+        <footer class="bg-black text-white p-4 text-center">
+            <p>© 2025 Banco Digital. Todos os direitos reservados.</p>
+        </footer>
+
+        <script>
+            const btnPoupanca = document.getElementById('btnPoupanca');
+            const btnCorrente = document.getElementById('btnCorrente');
+            const btnInvestimento = document.getElementById('btnInvestimento');
+            const secaoPoupanca = document.getElementById('secaoPoupanca');
+            const secaoCorrente = document.getElementById('secaoCorrente');
+            const secaoInvestimento = document.getElementById('secaoInvestimento');
+
+            function resetSelection() {
+                [btnPoupanca, btnCorrente, btnInvestimento].forEach(btn => {
+                    btn.classList.remove('border-black', 'bg-gray-100');
+                    btn.classList.add('border-gray-300');
+                });
+                [secaoPoupanca, secaoCorrente, secaoInvestimento].forEach(sec => {
+                    sec.classList.add('hidden');
+                });
+            }
+
+            btnPoupanca.addEventListener('click', (e) => {
+                e.preventDefault();
+                resetSelection();
+                btnPoupanca.classList.add('border-black', 'bg-gray-100');
+                secaoPoupanca.classList.remove('hidden');
+            });
+
+            btnCorrente.addEventListener('click', (e) => {
+                e.preventDefault();
+                resetSelection();
+                btnCorrente.classList.add('border-black', 'bg-gray-100');
+                secaoCorrente.classList.remove('hidden');
+            });
+
+            btnInvestimento.addEventListener('click', (e) => {
+                e.preventDefault();
+                resetSelection();
+                btnInvestimento.classList.add('border-black', 'bg-gray-100');
+                secaoInvestimento.classList.remove('hidden');
+            });
+
+            document.getElementById('formAbertura').addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Conta aberta com sucesso!');
+                window.location.href = 'menu_funcionario.html';
+            });
+        </script>
+    </div>
+</body>
+</html>

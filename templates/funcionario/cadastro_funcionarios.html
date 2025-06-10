@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Funcionários</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-black text-white p-4 shadow-md">
+            <div class="container mx-auto flex justify-between items-center">
+                <div>
+                    <h1 class="text-xl font-bold">Cadastro de Funcionários</h1>
+                    <p class="text-sm text-gray-300">Funcionário: João Silva | Matrícula: 12345</p>
+                </div>
+                <a href="menu-funcionario.html" class="hover:text-gray-300">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </a>
+            </div>
+        </header>
+
+        <main class="flex-grow container mx-auto p-4">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+                <div class="p-4 border-b border-gray-200 bg-gray-800 text-white">
+                    <h2 class="text-lg font-bold">Novo Funcionário</h2>
+                    <p class="text-sm text-gray-300">Agência: 0001 | Funcionários ativos: 15/20</p>
+                </div>
+
+                <form id="formCadastro" class="p-6 space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="nome" class="block text-gray-700 mb-2">Nome Completo</label>
+                            <input type="text" id="nome" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                        </div>
+                        <div>
+                            <label for="cpf" class="block text-gray-700 mb-2">CPF</label>
+                            <input type="text" id="cpf" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label for="dataNascimento" class="block text-gray-700 mb-2">Data Nascimento</label>
+                            <input type="date" id="dataNascimento" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                        </div>
+                        <div>
+                            <label for="cargo" class="block text-gray-700 mb-2">Cargo</label>
+                            <select id="cargo" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                                <option value="">Selecione...</option>
+                                <option value="atendente">Atendente</option>
+                                <option value="gerente">Gerente</option>
+                                <option value="caixa">Caixa</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="matricula" class="block text-gray-700 mb-2">Matrícula</label>
+                            <input type="text" id="matricula" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100" value="AUTO GERADO" readonly>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="email" class="block text-gray-700 mb-2">E-mail</label>
+                            <input type="email" id="email" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                        </div>
+                        <div>
+                            <label for="telefone" class="block text-gray-700 mb-2">Telefone</label>
+                            <input type="tel" id="telefone" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="endereco" class="block text-gray-700 mb-2">Endereço</label>
+                        <input type="text" id="endereco" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="senha" class="block text-gray-700 mb-2">Senha Temporária</label>
+                            <input type="password" id="senha" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                        </div>
+                        <div>
+                            <label for="confirmarSenha" class="block text-gray-700 mb-2">Confirmar Senha</label>
+                            <input type="password" id="confirmarSenha" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-exclamation-triangle text-yellow-500"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-yellow-700">
+                                    <strong>Atenção:</strong> Cadastros de funcionários requerem aprovação de gerente.
+                                    <br>Limite máximo de 20 funcionários por agência.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="gerenteSection" class="hidden">
+                        <label for="senhaGerente" class="block text-gray-700 mb-2">Senha de Gerente</label>
+                        <input type="password" id="senhaGerente" class="w-full p-3 border border-gray-300 rounded-lg">
+                    </div>
+
+                    <button type="submit" class="w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 mt-4">
+                        <i class="fas fa-user-plus mr-2"></i> Cadastrar Funcionário
+                    </button>
+                </form>
+            </div>
+        </main>
+
+        <footer class="bg-black text-white p-4 text-center">
+            <p class="text-sm">© 2023 Banco Digital - Todos os direitos reservados</p>
+        </footer>
+    </div>
+
+    <script>
+        // Aqui você pode adicionar a lógica JavaScript para o formulário
+        document.getElementById('formCadastro').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validação básica de senha
+            const senha = document.getElementById('senha').value;
+            const confirmarSenha = document.getElementById('confirmarSenha').value;
+            
+            if (senha !== confirmarSenha) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+            
+            // Aqui você pode adicionar a lógica para enviar os dados do formulário
+            alert('Funcionário cadastrado com sucesso! Aguardando aprovação do gerente.');
+            this.reset();
+        });
+
+        // Mostrar campo de senha de gerente se o cargo for gerente
+        document.getElementById('cargo').addEventListener('change', function() {
+            const gerenteSection = document.getElementById('gerenteSection');
+            if (this.value === 'gerente') {
+                gerenteSection.classList.remove('hidden');
+            } else {
+                gerenteSection.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
