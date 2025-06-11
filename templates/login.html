@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="../static/img/icons8-darth-vader.svg">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-gray-100 text-gray-900">
     <div class="min-h-screen flex flex-col">
@@ -14,7 +15,7 @@
         <header class="bg-black text-white p-4 shadow-md">
             <div class="container mx-auto flex justify-between items-center">
                 <h1 class="text-2xl font-bold">Sistema - Login</h1>
-                <a href="inicio.html" class="hover:text-gray-300">
+                <a href="/" class="hover:text-gray-300">
                     <i class="fas fa-home"></i>
                 </a>
             </div>
@@ -34,19 +35,21 @@
                     </button>
                 </div>
                 
-                <form class="space-y-4">
+                <form method="POST" action="/login" class="space-y-4">
+                    <input type="hidden" name="tipo_acesso" id="tipoAcessoInput" value="cliente">
+                    
                     <div>
                         <label for="cpf" class="block text-gray-700 mb-2">CPF</label>
-                        <input type="text" id="cpf" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent" placeholder="000.000.000-00">
+                        <input type="text" id="cpf" name="cpf" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent" placeholder="000.000.000-00" oninput="this.value = this.value.replace(/\D/g, '').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2')" required>
                     </div>
                     
                     <div>
                         <label for="senha" class="block text-gray-700 mb-2">Senha</label>
-                        <input type="password" id="senha" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent" placeholder="********">
+                        <input type="password" id="senha" name="senha" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent" placeholder="********" required>
                     </div>
 
                     <div class="mt-4 text-center" id="cadastroCliente">
-                        <a href="cadastro.html" class="text-black hover:underline">
+                        <a href="/cadastro" class="text-black hover:underline">
                             <i class="fas fa-user-plus mr-1"></i> Cadastrar-se
                         </a>
                     </div>
@@ -57,9 +60,9 @@
                 </form>
                 
                 <div class="mt-6 text-center">
-                    <button class="text-gray-600 hover:text-black">
+                    <a href="/" class="text-gray-600 hover:text-black">
                         <i class="fas fa-door-open mr-2"></i> Sair
-                    </button>
+                    </a>
                 </div>
             </div>
         </main>
@@ -70,9 +73,28 @@
         </footer>
 
         <script>
-            // Seleciona os botões
+            // Verifica parâmetros de URL para mensagens
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('message');
+            const type = urlParams.get('type');
+            
+            if (message && type) {
+                Swal.fire({
+                    title: type === 'success' ? 'Sucesso!' : 'Erro!',
+                    text: message,
+                    icon: type,
+                    confirmButtonText: 'OK'
+                });
+                
+                // Limpa a URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+            // Seleciona os botões e elementos
             const btnCliente = document.getElementById('btnCliente');
             const btnFuncionario = document.getElementById('btnFuncionario');
+            const cadastroCliente = document.getElementById('cadastroCliente');
+            const tipoAcessoInput = document.getElementById('tipoAcessoInput');
             
             // Estado inicial - Cliente selecionado
             let tipoAcesso = 'cliente';
@@ -92,26 +114,10 @@
                     btnCliente.classList.remove('bg-black', 'hover:bg-gray-800');
                     btnCliente.classList.add('bg-gray-400', 'hover:bg-gray-500');
                 }
+                atualizarCadastro();
             }
-            
-            // Event listeners para os botões
-            btnCliente.addEventListener('click', function(e) {
-                e.preventDefault();
-                tipoAcesso = 'cliente';
-                atualizarBotoes();
-            });
-            
-            btnFuncionario.addEventListener('click', function(e) {
-                e.preventDefault();
-                tipoAcesso = 'funcionario';
-                atualizarBotoes();
-            });
-            
-            // Inicializa os botões
-            atualizarBotoes();
 
-            const cadastroCliente = document.getElementById('cadastroCliente');
-
+            // Mostra ou oculta o link de cadastro
             function atualizarCadastro() {
                 if (tipoAcesso === 'cliente') {
                     cadastroCliente.style.display = 'block';
@@ -119,6 +125,24 @@
                     cadastroCliente.style.display = 'none';
                 }
             }
+            
+            // Event listeners para os botões
+            btnCliente.addEventListener('click', function(e) {
+                e.preventDefault();
+                tipoAcesso = 'cliente';
+                tipoAcessoInput.value = 'cliente';
+                atualizarBotoes();
+            });
+            
+            btnFuncionario.addEventListener('click', function(e) {
+                e.preventDefault();
+                tipoAcesso = 'funcionario';
+                tipoAcessoInput.value = 'funcionario';
+                atualizarBotoes();
+            });
+            
+            // Inicializa os botões e estado do cadastro
+            atualizarBotoes();
         </script>
     </div>
 </body>

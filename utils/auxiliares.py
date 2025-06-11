@@ -10,7 +10,7 @@ def gerador_codigo_funcionario(id_usuario: str, cpf: str,data_nascimento:str,car
     cpf_limpo = limpar_cpf(cpf)
     cpf_primeiros = cpf_limpo[:3]
 
-    data = datetime.strptime(data_nascimento, "%d/%m%y")
+    data = datetime.strptime(data_nascimento, "%d/%m/%y")
     mes_ano = data.strftime("%m%y")
 
     if cargo.upper().strip() == "GERENTE":

@@ -2,16 +2,19 @@ from utils.validator import Validator
 from utils.criptografia_senha import criptografada
 from repository import usuarioDAO as usuario, clienteDAO as Cliente
 from repository.contasDAO import ContaCorrenteRepository as CC, ContaInvestimentoRepository as CI, ContaPoupancaRepository as CP, ContaRepository as conta
+from utils.auxiliares import limpar_cpf
 
 class ClienteServices:
 
     @staticmethod
     def create_account(nome, cpf, data_nascimento, senha, telefone, email, tipo_usuario='CLIENTE'):
+        cpf_limpo = limpar_cpf(cpf)
+
         resultado_nome = Validator.validate_nome(nome)
         if not resultado_nome["valido"]:
             raise ValueError(f"Nome inválido: {resultado_nome['erros']}")
 
-        resultado_cpf = Validator.validate_cpf(cpf)
+        resultado_cpf = Validator.validate_cpf(cpf_limpo)
         if not resultado_cpf["valido"]:
             raise ValueError(f"CPF inválido: {resultado_cpf['erros']}")
 
