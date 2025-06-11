@@ -1,4 +1,5 @@
 from utils.validator import Validator
+from utils.auxiliares import tratar_data
 from utils.criptografia_senha import criptografada
 from repository.clienteDAO import ClienteRepository as Cliente
 from repository.usuarioDAO import UsuarioRepository as usuario
@@ -121,33 +122,7 @@ class ClienteServices:
             return {"status": "cliente excluído com sucesso"}
         except Exception as e:
             raise ValidacaoNegocioError(f"Erro ao excluir cliente: {e}")
-        
-    @staticmethod
-    def consultar_saldo(id_conta, senha, otp, id_usuario):
-        try:
-            if not usuario.validar_senha(id_usuario, senha):
-                raise ValidacaoNegocioError("Senha inválida.")
-            if not usuario.validar_otp(id_usuario, otp):
-                raise ValidacaoNegocioError("OTP inválido ou expirado.")
-            
-            conta_info = conta.get_conta_by_id(id_conta)
-            saldo = conta_info.saldo
-            tipo = conta_info.tipo_conta
 
-            if tipo == "POUPANCA":
-                rendimento = CP.projetar_rendimento(id_conta)
-            elif tipo == "INVESTIMENTO":
-                rendimento = CI.projetar_rendimento(id_conta)
-            else:
-                rendimento = 0.0
-
-            return {
-                "saldo": saldo,
-                "projecao_rendimento": rendimento
-            }
-
-        except Exception as e:
-            raise ValidacaoNegocioError(f"Erro ao consultar saldo: {e}")
 
     @staticmethod
     def consultar_status_limite(id_cliente):

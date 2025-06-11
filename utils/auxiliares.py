@@ -65,7 +65,12 @@ def verificar_sequencia_numerica(senha,tamanho_min = 1):
 
  # -> tira simbolos e espaços da data
 def tratar_data(data: str) -> str:
-    return re.sub(r'[^0-9]', '', data)
+    for formato in ("%d/%m/%Y", "%Y-%m-%d", "%d-%m-%Y", "%d%m%Y"):
+        try:
+            return datetime.strptime(data, formato).strftime("%Y-%m-%d")
+        except ValueError:
+            continue
+    raise ValueError(f"Formato de data inválido: {data}")
 
 
 def gerar_numero_conta():

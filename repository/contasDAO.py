@@ -62,6 +62,11 @@ class ContaRepository:
             cursor.execute("DELETE FROM conta WHERE id_conta = %s", (id_conta,))
 
     @staticmethod
+    def encerrar_conta(id_conta):
+        with DBContext() as (_,cursor):
+            cursor.execute("UPDATE SET status = 'ENCERRADA' FROM conta where id_conta = %s",(id_conta,))
+
+    @staticmethod
     def get_data_ultima_transacao(id_conta):
         with DBContext() as (_, cursor):
             cursor.execute("""
@@ -82,7 +87,7 @@ class ContaPoupancaRepository:
                 INSERT INTO conta_poupanca (id_conta, taxa_rendimento, ultimo_rendimento)
                 VALUES (%s, %s, %s)
             """, (conta.id_conta, conta.taxa_rendimento, conta.ultimo_rendimento))
-
+# TODO corrigir função pois ela deixa todos os campos como obrigatórios 
     @staticmethod
     def update(conta: ContaPoupanca):
         with DBContext() as (_, cursor):
@@ -215,3 +220,54 @@ class TransacaoRepository:
                 INSERT INTO transacao (id_conta_origem, id_conta_destino, tipo_transacao, valor, data_hora, descricao)
                 VALUES (%s, %s, %s, %s, %s, %s)
             """, (id_conta_origem, id_conta_destino, tipo_transacao, valor, data_hora, descricao))
+            return cursor.lastrowid
+
+    @staticmethod
+    def get_transacoes_da_conta(id_conta, limite=50):
+        with DBContext() as (_, cursor):
+            cursor.execute("""
+                SELECT *
+                FROM transacao
+                WHERE id_conta_origem = %s OR id_conta_destino = %s
+                ORDER BY data_hora DESC
+                LIMIT %s
+            """, (id_conta, id_conta, limite))
+            return cursor.fetchall()
+
+    @staticmethod
+    def get_transacoes_por_periodo(id_conta, data_inicio, data_fim):
+        with DBContext() as (_, cursor):
+            cursor.execute("""
+                SELECT *
+                FROM transacao
+                WHERE (id_conta_origem = %s OR id_conta_destino = %s)
+                AND data_hora BETWEEN %s AND %s
+                ORDER BY data_hora DESC
+            """, (id_conta, id_conta, data_inicio, data_fim))
+            return cursor.fetchall()
+
+    @staticmethod
+    def get_transacoes_por_tipo(id_conta, tipo_transacao):
+        with DBContext() as (_, cursor):
+            cursor.execute("""
+                SELECT *
+                FROM transacao
+                WHERE (id_conta_origem = %s OR id_conta_destino = %s)
+                AND tipo_transacao = %s
+                ORDER BY data_hora DESC
+            """, (id_conta, id_conta, tipo_transacao))
+            return cursor.fetchall()
+
+    @staticmethod
+    def get_total_movimentado_mensal(id_conta, ano, mes):
+        with DBContext() as (_, cursor):
+            cursor.execute("""
+                SELECT SUM(valor) as total
+                FROM transacao
+                WHERE (id_conta_origem = %s OR id_conta_destino = %s)
+                AND YEAR(data_hora) = %s AND MONTH(data_hora) = %s
+            """, (id_conta, id_conta, ano, mes))
+            resultado = cursor.fetchone()
+            return resultado["total"] if resultado and resultado["total"] else 0.0
+
+    
