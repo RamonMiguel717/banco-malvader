@@ -1,4 +1,5 @@
 from datetime import datetime
+import random
 import re
 
 
@@ -28,7 +29,6 @@ def limpar_cpf(cpf:str):
     cpf_limpo =''.join(filter(str.isdigit, cpf))
     return cpf_limpo
 
-
 @staticmethod 
 def verificar_sequencia_numerica(senha,tamanho_min = 1):
     numeros = ''.join(filter(str.isdigit,senha))
@@ -51,3 +51,26 @@ def verificar_sequencia_numerica(senha,tamanho_min = 1):
 def tratar_data(data: str) -> str:
     return re.sub(r'[^0-9]', '', data)
 
+_otps = {}
+
+@staticmethod
+def gerar_otp(cpf: str):
+    """Gera um OTP de 6 dígitos e armazena temporariamente com tempo de expiração de 5 minutos."""
+    otp = str(random.randint(100000, 999999))
+    validade = datetime.now() + timedelta(minutes=5)
+    _otps[cpf] = (otp, validade)
+    return otp
+
+@staticmethod
+def validar_otp(cpf: str, otp_informado: str) -> bool:
+    """Valida se o OTP informado é correto e ainda está dentro do prazo de validade."""
+    dados = _otps.get(cpf)
+    if not dados:
+        return False  # Nenhum OTP gerado para esse CPF
+
+    otp_armazenado, validade = dados
+    if datetime.now() > validade:
+        del _otps[cpf]  # Limpa OTP expirado
+        return False  # Expirado
+
+    return otp_armazenado == otp_informado

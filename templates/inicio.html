@@ -6,6 +6,8 @@
     <title>Início</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="../static/img/icons8-darth-vader.svg">
+
 </head>
 <body class="bg-gray-100 text-gray-900">
     <div class="min-h-screen flex flex-col">
@@ -28,19 +30,24 @@
                 <p class="mb-8 text-gray-600">Selecione uma opção para continuar</p>
                 
                 <div class="space-y-4">
-                    <a href="login.html" class="block w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 transition duration-300">
-                        <i class="fas fa-sign-in-alt mr-2"></i> Acessar Banco Malvader
-                    </a>
-                    <a href="sistema.html" class="block w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 transition duration-300">
-                        <i class="fas fa-info-circle mr-2"></i> Sobre o Banco Malvader
-                    </a>
+                    <form action="{{ url_for('usuario.login') }}" method="get">
+                        <button type="submit" class="block w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 transition duration-300">
+                            <i class="fas fa-sign-in-alt mr-2"></i> Acessar Banco Malvader
+                        </button>
+                    </form>
+                
+                    <form action="{{ url_for('usuario.sistema') }}" method="get">
+                        <button type="submit" class="block w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 transition duration-300">
+                            <i class="fas fa-info-circle mr-2"></i> Sobre o Banco Malvader
+                        </button>
+                    </form>
                 </div>
             </div>
         </main>
 
         <!-- Rodapé -->
         <footer class="bg-black text-white p-4 text-center">
-            <p>© 2023 Banco Malvader. Todos os direitos reservados.</p>
+            <p>© 2025 Banco Malvader. Todos os direitos reservados.</p>
         </footer>
     </div>
 </body>

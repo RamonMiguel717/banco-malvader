@@ -22,8 +22,7 @@ Este projeto tem como objetivo o desenvolvimento de um **Sistema Bancário compl
 | Nome                  | Função                    |
 |-----------------------|---------------------------|
 | Ramon Miguel          | Desenvolvedor             |
-| Eduarda Rita Marques | Desenvolvedora            |
-| Marcos Alexandre      | Desenvolvedor             |
+| Maria Eduarda Marques | Desenvolvedora            |
 | Rafael Canavarro      | Desenvolvedor             |
 
 ---
