@@ -1,6 +1,9 @@
+from repository.tabelasDAO import Tabelas as T
+from repository.proceduresDAO import Procedures 
+from utils import exceptions
+
 def criar_banco_e_tabelas():
-    from repository.tabelasDAO import Tabelas as T
-    from repository.proceduresDAO import Procedures 
+
 
     try:
         criar_banco()
@@ -23,9 +26,19 @@ def criar_banco_e_tabelas():
         Procedures.criar_procedure_gerar_otp()
         Procedures.criar_procedure_invalidar_otp()
 
-    except mysql.connector.Error as err:
-        tratar_erro_mysql(err)
 
 
-# TODO: Criar uma função para apagar tudo do banco de dados
 
+    except exceptions.BancoMalvaderError() as e:
+        log_error(e)
+
+
+from repository.conexao import DBContext
+
+def criar_banco():
+    with DBContext() as (_, cursor):
+        cursor.execute("CREATE DATABASE IF NOT EXISTS banco_malvader")
+        cursor.execute("USE banco_malvader")
+
+def log_error(e):
+    print(f"[ERRO] {str(e)}")

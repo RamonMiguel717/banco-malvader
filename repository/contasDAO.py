@@ -3,6 +3,7 @@ from model.conta_model import Conta
 from model.conta_poupanca_model import ContaPoupanca
 from model.conta_corrente_model import ContaCorrente
 from model.conta_investimento_model import ContaInvestimento
+from model.transacao_model import Transacao
 
 """
 Dentro deste documento existem TODAS as classes de CONTAS (conta poupança, investimento...)
@@ -16,7 +17,7 @@ class ContaRepository:
 
     @staticmethod
     
-    def insert_conta(numero_conta, id_agencia, saldo, tipo_conta, id_cliente, data_abertura, status):
+    def insert(numero_conta, id_agencia, saldo, tipo_conta, id_cliente, data_abertura, status):
         with DBContext() as (_, cursor):
             cursor.execute("""
                 INSERT INTO conta (numero_conta, id_agencia, saldo, tipo_conta, id_cliente, data_abertura, status)
@@ -57,6 +58,14 @@ class ContaRepository:
             """, (saldo, status, id_conta))
 
     @staticmethod
+    def atualizar_saldo(id_conta,saldo):
+        with DBContext() as (_, cursor):
+            cursor.execute("""
+            UPDATE conta
+            SET saldo = %s WHERE id_conta = %s
+""",(saldo,id_conta))
+
+    @staticmethod
     def delete_conta(id_conta):
         with DBContext() as (_, cursor):
             cursor.execute("DELETE FROM conta WHERE id_conta = %s", (id_conta,))
@@ -66,16 +75,7 @@ class ContaRepository:
         with DBContext() as (_,cursor):
             cursor.execute("UPDATE SET status = 'ENCERRADA' FROM conta where id_conta = %s",(id_conta,))
 
-    @staticmethod
-    def get_data_ultima_transacao(id_conta):
-        with DBContext() as (_, cursor):
-            cursor.execute("""
-                SELECT MAX(data_hora) as ultima_transacao
-                FROM transacao
-                WHERE id_conta_origem = %s OR id_conta_destino = %s
-            """, (id_conta, id_conta))
-            resultado = cursor.fetchone()
-            return resultado["ultima_transacao"] if resultado else None
+
     # Encontra a ultima transação realizada pela conta (classe utilizada para atualização da Data de VENCIMENTO da conta, além do Auditorio)
 class ContaPoupancaRepository:
 
@@ -233,6 +233,17 @@ class TransacaoRepository:
                 LIMIT %s
             """, (id_conta, id_conta, limite))
             return cursor.fetchall()
+        
+    @staticmethod
+    def get_data_ultima_transacao(id_conta):
+        with DBContext() as (_, cursor):
+            cursor.execute("""
+                SELECT MAX(data_hora) as ultima_transacao
+                FROM transacao
+                WHERE id_conta_origem = %s OR id_conta_destino = %s
+            """, (id_conta, id_conta))
+            resultado = cursor.fetchone()
+            return resultado["ultima_transacao"] if resultado else None
 
     @staticmethod
     def get_transacoes_por_periodo(id_conta, data_inicio, data_fim):
@@ -244,8 +255,9 @@ class TransacaoRepository:
                 AND data_hora BETWEEN %s AND %s
                 ORDER BY data_hora DESC
             """, (id_conta, id_conta, data_inicio, data_fim))
-            return cursor.fetchall()
-
+            rows = cursor.fetchall()
+            return [Transacao(**row) for row in rows]
+        
     @staticmethod
     def get_transacoes_por_tipo(id_conta, tipo_transacao):
         with DBContext() as (_, cursor):
