@@ -5,6 +5,8 @@ import os
 
 load_dotenv()
 
+#Faz a conexão com o banco de dados e a criação do cursor
+
 def obter_conexao():
     return mysql.connector.connect(
         host=os.getenv("DB_HOST"),

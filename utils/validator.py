@@ -60,6 +60,7 @@ class Validator:
     @staticmethod
     def validate_senha(senha: str, email: str, nome: str, data_nascimento: date) -> dict:
         erros = []
+
         if len(senha) < 8:
             erros.append("A senha deve ter no mínimo 8 caracteres.")
         if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", senha):
@@ -80,11 +81,15 @@ class Validator:
         if email and email.split("@")[0].lower() in senha.lower():
             erros.append("A senha não pode conter seu e-mail.")
 
-        data_formatada = auxiliares.tratar_data(data_nascimento)
-        if any(data in senha for data in data_formatada):
+        # Correção aqui
+        data_str = data_nascimento.strftime("%d/%m/%Y")
+        data_formatada = auxiliares.tratar_data(data_str)
+
+        if data_formatada in senha:
             erros.append("A senha não pode conter sua data de nascimento.")
 
         return {"valido": len(erros) == 0, "erros": erros}
+
 
     @staticmethod
     def validate_telefone(telefone:str)-> dict:
