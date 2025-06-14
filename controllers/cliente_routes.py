@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from repository.banco_dao import ClienteRepository
+from ..repository.banco_dao import ClienteRepository
 
 cliente_bp = Blueprint('cliente', __name__, url_prefix='/clientes')
 

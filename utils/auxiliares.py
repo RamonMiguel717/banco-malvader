@@ -1,6 +1,6 @@
 from datetime import datetime, date
-from repository.usuarioDAO import get_usuario_by_id
-from repository.contasDAO import ContaRepository as conta, ContaCorrenteRepository as CC
+from ..repository.usuario_dao import UsuarioRepository
+from ..repository.contas_dao import ContaRepository as conta, ContaPoupancaRepository as CC
 from dateutil import relativedelta
 import random
 import re
@@ -11,7 +11,7 @@ import re
 O codigo do funcionário é uma combinação das informações pessoais do funcionário além do seu cargo dentro do Banco
 """
 def gerador_codigo_funcionario(id_usuario: str, cargo):
-    usuario = get_usuario_by_id(id_usuario)
+    usuario = UsuarioRepository.get_usuario_by_id(id_usuario)
     cpf = usuario['cpf']
     data_nascimento = usuario['data_nascimento']
 

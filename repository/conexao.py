@@ -4,27 +4,29 @@ from mysql.connector.cursor import MySQLCursorDict
 import os
 
 load_dotenv()
-
-#Faz a conexão com o banco de dados e a criação do cursor
-
+#Funciona
 def obter_conexao():
     return mysql.connector.connect(
-        host=os.getenv("DB_HOST"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_NAME"),
-        port=int(os.getenv("DB_PORT"))
+        host=os.getenv("DB_HOST", "127.0.0.1"),
+        user=os.getenv("DB_USER", "root"),
+        password=os.getenv("DB_PASSWORD", "nova_senha"),
+        database="banco_malvader",
+        port=int(os.getenv("DB_PORT", 3306))
     )
+
 
 class DBContext:
     def __enter__(self):
         self.conn = obter_conexao()
-        self.cursor = self.conn.cursor(cursor_class=MySQLCursorDict)
+        self.cursor = self.conn.cursor()
         return self.conn, self.cursor
+
 
     def __exit__(self, exc_type, exc_value, traceback):
         if exc_type:
             self.conn.rollback()
         else:
             self.conn.commit()
-        self.conn.close()
+        #self.cursor.close()
+        #self.conn.close()
+

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from repository.banco_dao import AgenciaRepository
+from ..repository.banco_dao import AgenciaRepository
 
 endereco_bp = Blueprint('endereco',__name__,url_prefix='/endereco')
 

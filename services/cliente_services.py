@@ -1,0 +1,116 @@
+from ..utils.validator import Validator
+from ..utils.auxiliares import tratar_data
+from ..utils.criptografia_senha import criptografada
+from ..repository.cliente_dao import ClienteRepository as Cliente
+from ..repository.usuario_dao import UsuarioRepository as usuario
+from ..repository.contas_dao import ContaCorrenteRepository as CC, ContaInvestimentoRepository as CI, ContaPoupancaRepository as CP, ContaRepository as conta
+from ..utils.exceptions import ValidacaoNegocioError, ClienteNaoEncontradoError
+
+class ClienteServices:
+
+    @staticmethod
+    def _validar_campo(label, resultado_validacao):
+        if not resultado_validacao['valido']:
+            raise ValidacaoNegocioError(f"{label} inválido: {resultado_validacao['erros']}")
+
+    @staticmethod
+    def create_account(nome, cpf, data_nascimento, senha, telefone, email, tipo_usuario='CLIENTE'):
+        try:
+            ClienteServices._validar_campo("Nome", Validator.validate_nome(nome))
+            ClienteServices._validar_campo("CPF", Validator.validate_cpf(cpf))
+            ClienteServices._validar_campo("Senha", Validator.validate_senha(senha))
+            ClienteServices._validar_campo("Telefone", Validator.validate_telefone(telefone))
+            ClienteServices._validar_campo("Email", Validator.validate_email(email))
+            ClienteServices._validar_campo("Data de nascimento", Validator.validate_idade(data_nascimento))
+
+            senha_hash = criptografada(senha)
+            usuario.insert_usuario(nome, cpf, data_nascimento, telefone, email, tipo_usuario, senha_hash, False, None)
+            usuario_obj = usuario.get_usuario_by_cpf(cpf)
+            Cliente.insert_cliente(usuario_obj.id_usuario)
+
+            return {"status": "sucesso", "id_usuario": usuario_obj.id_usuario}
+
+        except Exception as e:
+            raise ValidacaoNegocioError(f"Erro ao criar conta do cliente: {e}")
+
+    @staticmethod
+    def get_cliente_by_usuario(id_usuario):
+        try:
+            cliente = Cliente.get_cliente_by_id(id_usuario)
+            contas = conta.get_contas_by_cliente(cliente.id_cliente)
+            return {
+                'cliente': cliente,
+                'contas': contas,
+                'score': cliente.score_credito
+            }
+        except Exception as e:
+            raise ClienteNaoEncontradoError(f"Erro ao identificar cliente: {e}")
+
+    @staticmethod
+    def get_cliente_by_cpf(cpf):
+        try:
+            cliente = Cliente.get_cliente_by_cpf(cpf)
+            contas = conta.get_contas_by_cliente(cliente.id_cliente)
+            return {
+                'cliente': cliente,
+                'contas': contas,
+                'score': cliente.score_credito
+            }
+        except Exception as e:
+            raise ClienteNaoEncontradoError(f"Não foi possível encontrar o cliente: {e}")
+
+    @staticmethod
+    def get_contas_do_cliente(id_cliente):
+        try:
+            return conta.get_contas_by_cliente(id_cliente)
+        except Exception as e:
+            raise ValidacaoNegocioError(f"Não foi possível encontrar as contas do cliente: {e}")
+
+    @staticmethod
+    def list_clientes():
+        try:
+            clientes_cru = Cliente.listar_clientes_completo()
+            return [
+                {
+                    "id_cliente": cliente.id_cliente,
+                    "nome": cliente.nome,
+                    "cpf": cliente.cpf,
+                    "score_credito": cliente.score_credito
+                }
+                for cliente in clientes_cru
+            ]
+        except Exception as e:
+            raise ValidacaoNegocioError(f"Não foi possível listar os clientes: {e}")
+
+    @staticmethod
+    def recalcular_score(id_cliente):
+        try:
+            Cliente.recalcular_score_credito(id_cliente)
+            return {"status": "score recalculado com sucesso"}
+        except Exception as e:
+            raise ValidacaoNegocioError(f"Erro ao recalcular score: {e}")
+
+    @staticmethod
+    def excluir_cliente(id_cliente):
+        try:
+            Cliente.delete_cliente(id_cliente)
+            return {"status": "cliente excluído com sucesso"}
+        except Exception as e:
+            raise ValidacaoNegocioError(f"Erro ao excluir cliente: {e}")
+
+    @staticmethod
+    def consultar_status_limite(id_cliente):
+        try:
+            contas_cliente = conta.get_contas_by_cliente(id_cliente)
+            return [
+                {
+                    "numero_conta": c.numero_conta,
+                    "tipo_conta": c.tipo_conta,
+                    "status": c.status,
+                    "limite": getattr(c, "limite", 0.0),
+                    "saldo": c.saldo
+                }
+                for c in contas_cliente
+            ]
+        except Exception as e:
+            raise ValidacaoNegocioError(f"Erro ao consultar status/limite: {e}")
