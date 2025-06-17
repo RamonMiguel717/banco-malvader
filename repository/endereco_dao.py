@@ -1,5 +1,5 @@
-from .conexao import DBContext
-from ..model.endereco_model import Endereco
+from conexao import DBContext
+from model.endereco_model import Endereco
 
 class EnderecoRepository:
 

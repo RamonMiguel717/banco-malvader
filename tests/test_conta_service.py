@@ -1,7 +1,7 @@
 import pytest
-from ..services.cliente_services import ClienteServices
-from ..services.contas_services import ContaService,ContaCorrenteService
-from ..repository.contas_dao import ContaRepository as CT
+from services.cliente_services import ClienteServices
+from services.contas_services import ContaService,ContaCorrenteService
+from repository.contas_dao import ContaRepository as CT
 
 
 def test_criacao_de_conta():

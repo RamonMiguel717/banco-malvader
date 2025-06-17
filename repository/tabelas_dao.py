@@ -10,10 +10,10 @@ Além da criação das tabelas, também criei os Triggers em uma classe própria
 não é a melhor das organizações mas é o que funciona no momento, pode tomar a liberdade de organizar da maneira que achar melhor
 só garanta que refatorou o codigo,
 """
-from .conexao import DBContext
+from conexao import DBContext
 
 class Tabelas:
-
+    # Funciona
     def create_table_usuario():
         with DBContext() as (_, cursor):
             cursor.execute("""
@@ -31,7 +31,7 @@ class Tabelas:
                     otp_expiracao DATETIME
                 );
             """)
-
+    # Funciona
     def create_table_funcionarios():
             # Tabela de funcionarios
         with DBContext() as (_, cursor):
@@ -46,6 +46,7 @@ class Tabelas:
                     FOREIGN KEY (id_supervisor) REFERENCES funcionarios(id_funcionario)
                 );
             """)
+    # Funciona
     def create_table_cliente():
             # Tabela de clientes
         with DBContext() as (_, cursor):
@@ -57,6 +58,7 @@ class Tabelas:
                     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
                 );
             """)
+    # Funciona
     def create_table_endereco():
             # Tabela de enderecos
         with DBContext() as (_, cursor):
@@ -74,6 +76,7 @@ class Tabelas:
                     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
                 );
             """)
+    # Funciona
     def create_table_agencia():
             # Tabela de agencias
         with DBContext() as (_, cursor):
@@ -86,7 +89,7 @@ class Tabelas:
                     FOREIGN KEY (endereco_id) REFERENCES endereco(id_endereco)
                 );
             """)
-    
+    # Funciona
     @staticmethod
     def create_table_conta():
             # Tabela de contas
@@ -105,7 +108,7 @@ class Tabelas:
                     FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
                 );
             """)
-    
+    # Funciona
     @staticmethod
     def create_table_conta_poupanca():
         with DBContext() as (_, cursor):
@@ -118,7 +121,7 @@ class Tabelas:
                 );
             """)
 
-        
+    # Funciona      
     @staticmethod
     def create_table_conta_corrente():
         with DBContext() as (_, cursor):
@@ -131,7 +134,7 @@ class Tabelas:
                     FOREIGN KEY (id_conta) REFERENCES conta(id_conta)
                 );
             """)
-
+    # Funciona
     @staticmethod
     def create_table_conta_investimento():
         with DBContext() as (_, cursor):
@@ -145,7 +148,7 @@ class Tabelas:
                 );
             """)
 
-
+    # Funciona
     @staticmethod
     def create_table_transacao():
             # Transações
@@ -163,7 +166,7 @@ class Tabelas:
                     FOREIGN KEY (id_conta_destino) REFERENCES conta(id_conta)
                 );
             """)
- 
+# Funciona 
     @staticmethod 
     def create_table_auditoria():
             # Auditoria
@@ -178,7 +181,7 @@ class Tabelas:
                     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
                 );
             """)
-
+# Funciona
     @staticmethod
     def create_table_relatorio():
             # Relatório
@@ -193,6 +196,31 @@ class Tabelas:
                     FOREIGN KEY (id_funcionario) REFERENCES funcionarios(id_funcionario)
                 );
             """)
+# Funciona
+@staticmethod
+def apagar_tabelas():
+    with DBContext() as (_, cursor):
+        cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
+
+        tabelas = [
+            "transacao",
+            "conta_corrente",
+            "conta_poupanca",
+            "conta_investimento",
+            "conta",
+            "cliente",
+            "funcionario",
+            "agencia",
+            "usuarios",
+            "endereco",
+            "auditoria"
+        ]
+
+        for tabela in tabelas:
+            cursor.execute(f"DROP TABLE IF EXISTS {tabela};")
+
+        cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
+
 
 class procedures:
  

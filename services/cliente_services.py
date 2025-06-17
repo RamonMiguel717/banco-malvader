@@ -1,10 +1,10 @@
-from ..utils.validator import Validator
-from ..utils.auxiliares import tratar_data
-from ..utils.criptografia_senha import criptografada
-from ..repository.cliente_dao import ClienteRepository as Cliente
-from ..repository.usuario_dao import UsuarioRepository as usuario
-from ..repository.contas_dao import ContaCorrenteRepository as CC, ContaInvestimentoRepository as CI, ContaPoupancaRepository as CP, ContaRepository as conta
-from ..utils.exceptions import ValidacaoNegocioError, ClienteNaoEncontradoError
+from utils.validator import Validator
+from utils.auxiliares import tratar_data
+from utils.criptografia_senha import criptografada
+from repository.cliente_dao import ClienteRepository as Cliente
+from repository.usuario_dao import UsuarioRepository as usuario
+from repository.contas_dao import ContaCorrenteRepository as CC, ContaInvestimentoRepository as CI, ContaPoupancaRepository as CP, ContaRepository as conta
+from utils.exceptions import ValidacaoNegocioError, ClienteNaoEncontradoError
 
 class ClienteServices:
 

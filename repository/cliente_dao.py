@@ -1,6 +1,6 @@
-from .conexao import DBContext
+from conexao import DBContext
 from datetime import datetime
-from ..model.cliente_model import Cliente
+from model.cliente_model import Cliente
 
 class ClienteRepository:
 

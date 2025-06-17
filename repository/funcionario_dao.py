@@ -1,6 +1,6 @@
-from .conexao import DBContext
-from ..model.funcionario_model import Funcionario
-from ..utils import auxiliares
+from conexao import DBContext
+from model.funcionario_model import Funcionario
+from utils import auxiliares
 
 class FuncionarioRepository:
 

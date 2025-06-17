@@ -1,7 +1,8 @@
-from ..repository.usuario_dao import UsuarioRepository as User
-from ..utils.validator import Validator
-from ..utils.criptografia_senha import criptografada
-from ..utils.exceptions import ValidacaoNegocioError, AcessoNegadoError
+from repository.usuario_dao import UsuarioRepository as User
+from utils.validator import Validator
+from utils.criptografia_senha import criptografada
+from utils.enviar_email import enviar_otp_email
+from utils.exceptions import ValidacaoNegocioError, AcessoNegadoError
 
 class UsuarioServices:
 
@@ -50,14 +51,24 @@ class UsuarioServices:
 
         except Exception as e:
             raise AcessoNegadoError(f"Erro de autenticação: {e}")
-
     @staticmethod
-    def gerar_otp(id_usuario):
-        try:
-            return User.gerar_otp(id_usuario)
-        except Exception as e:
-            raise ValidacaoNegocioError(f"Erro ao gerar OTP: {e}")
+    def gerar_e_enviar_otp(id_usuario):
+        u = User.get_usuario_by_id(id_usuario)
+        if not u:
+            raise ValueError("Usuário não encontrado.")
 
+        otp = User.gerar_otp(id_usuario)
+
+        sucesso = enviar_otp_email(
+            destinatario_email= u.email,
+            nome_usuario=u.nome,
+            otp_codigo=otp
+        )
+
+        if not sucesso:
+            raise Exception("Não foi possível enviar o OTP por e-mail.")
+
+        return {"status": "OTP enviado com sucesso"}
     @staticmethod
     def validar_otp(id_usuario, otp_digitado):
         try:

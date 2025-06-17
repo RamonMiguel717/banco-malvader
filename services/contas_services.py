@@ -1,16 +1,16 @@
-from ..repository.contas_dao import (
+from repository.contas_dao import (
     ContaRepository as CT,
     ContaPoupancaRepository as CP,
     ContaCorrenteRepository as CC,
     ContaInvestimentoRepository as CI,
     TransacaoRepository as TR
 )
-from ..repository.cliente_dao import ClienteRepository
-from ..model.conta_corrente_model import ContaCorrente
-from ..model.conta_poupanca_model import ContaPoupanca
-from ..model.conta_investimento_model import ContaInvestimento
-from ..model.conta_model import Conta
-from .usuario_services import UsuarioServices as usuario
+from repository.cliente_dao import ClienteRepository
+from model.conta_corrente_model import ContaCorrente
+from model.conta_poupanca_model import ContaPoupanca
+from model.conta_investimento_model import ContaInvestimento
+from model.conta_model import Conta
+from usuario_services import UsuarioServices as usuario
 from datetime import datetime, timedelta
 from dateutil import relativedelta
 from utils import auxiliares

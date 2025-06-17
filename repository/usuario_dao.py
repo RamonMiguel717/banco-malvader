@@ -1,6 +1,6 @@
-from .conexao import DBContext
-from .auditoria_dao import AuditoriaRepository
-from ..model.usuario_model import Usuario
+from conexao import DBContext
+from auditoria_dao import AuditoriaRepository
+from model.usuario_model import Usuario
 from datetime import datetime
 
 """
@@ -10,12 +10,24 @@ Inclui todas as funções de manipulação de USUARIO
 class UsuarioRepository:
 
     @staticmethod
-    def insert_usuario(nome, cpf, data_nascimento, telefone, email, tipo_usuario, senha_hash, otp_ativo=False, otp_expiracao=None):
+    def insert_usuario(usuario: Usuario):
+
         with DBContext() as (_, cursor):
             cursor.execute("""
                 INSERT INTO usuario (nome, cpf, data_nascimento, telefone, email, tipo_usuario, senha_hash, otp_ativo, otp_expiracao)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, (nome, cpf, data_nascimento, telefone, email, tipo_usuario, senha_hash, otp_ativo, otp_expiracao))
+            """, (
+                usuario.nome,
+                usuario.cpf,
+                usuario.data_nascimento,
+                usuario.telefone,
+                usuario.email,
+                usuario.tipo_usuario,
+                usuario.senha_hash,
+                usuario.otp_ativo,
+                usuario.otp_expiracao
+            ))
+
 
     @staticmethod
     def get_usuario_by_id(id_usuario):

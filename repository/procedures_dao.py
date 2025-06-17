@@ -1,4 +1,4 @@
-from .conexao import DBContext
+from conexao import DBContext
 
 class Procedures:
 

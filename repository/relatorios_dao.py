@@ -1,5 +1,5 @@
-from .conexao import DBContext
-from ..model.relatorio_model import Relatorio
+from conexao import DBContext
+from model.relatorio_model import Relatorio
 from datetime import datetime
 
 """

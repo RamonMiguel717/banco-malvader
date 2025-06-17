@@ -1,9 +1,9 @@
-from .conexao import DBContext
-from ..model.conta_model import Conta
-from ..model.conta_poupanca_model import ContaPoupanca
-from ..model.conta_corrente_model import ContaCorrente
-from ..model.conta_investimento_model import ContaInvestimento
-from ..model.transacao_model import Transacao
+from conexao import DBContext
+from model.conta_model import Conta
+from model.conta_poupanca_model import ContaPoupanca
+from model.conta_corrente_model import ContaCorrente
+from model.conta_investimento_model import ContaInvestimento
+from model.transacao_model import Transacao
 from .conexao import DBContext
 
 

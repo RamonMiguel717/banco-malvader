@@ -1,6 +1,9 @@
-from repository.banco_dao import criar_banco_e_tabelas
+from repository import banco_dao
+from repository import conexao
 
 if __name__ == '__main__':
         
-    criar_banco_e_tabelas()
+    banco_dao.criar_banco()
+    conexao.obter_conexao()
+    banco_dao.criar_tabelas()
     
